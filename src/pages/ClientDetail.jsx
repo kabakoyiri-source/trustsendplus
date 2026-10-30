@@ -1,0 +1,314 @@
+import React, { useState, useEffect } from 'react'
+import { formatAmount } from '../services/money'
+import { useParams, Link, useNavigate } from 'react-router-dom'
+import { 
+  FiArrowLeft, 
+  FiArrowRight, 
+  FiUser, 
+  FiHome,
+  FiHash,
+  FiPhone, 
+  FiMapPin, 
+  FiCreditCard, 
+  FiDollarSign, 
+  FiRepeat,
+  FiTrash2,
+  FiLoader
+} from 'react-icons/fi'
+import api from '../services/api'
+import DeleteBeneficiaryDialog from '../components/DeleteBeneficiaryDialog'
+import './ClientDetail.css'
+
+function ClientDetail() {
+  const { id } = useParams()
+  const navigate = useNavigate()
+  const [client, setClient] = useState(null)
+  const [operations, setOperations] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+  const [deleting, setDeleting] = useState(false)
+
+  useEffect(() => {
+    loadClient()
+    loadOperations()
+  }, [id])
+
+  const loadClient = async () => {
+    try {
+      const response = await api.get(`/clients/${id}`)
+      if (response.data.success) {
+        setClient(response.data.data)
+      }
+    } catch (error) {
+      setError("Unable to load the beneficiary")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const loadOperations = async () => {
+    try {
+      const response = await api.get(`/operations?clientId=${id}`)
+      if (response.data.success) {
+        setOperations(response.data.data || [])
+      }
+    } catch (error) {
+      console.error("Unable to load transactions:", error)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="client-detail-container">
+        <div className="loading-container">
+          <FiLoader className="spinner-icon" size={48} />
+          <p>Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (error || !client) {
+    return (
+      <div className="client-detail-container">
+        <div className="error-message">
+          <span>{error || "Beneficiary not found"}</span>
+        </div>
+        <Link to="/clients" className="btn btn-primary">
+          <FiArrowLeft size={18} />
+          <span>Back to list</span>
+        </Link>
+      </div>
+    )
+  }
+
+  return (
+    <div className="client-detail-container">
+      <div className="client-detail-header">
+        <button 
+          onClick={() => navigate('/clients')} 
+          className="back-button"
+          aria-label="Back"
+        >
+          <FiArrowLeft size={20} />
+        </button>
+        <div className="header-content">
+          <h1>{client.firstName ? `${client.firstName} ` : ''}{client.lastName}</h1>
+        </div>
+        <div className="header-actions">
+          <Link to={`/operations/new?clientId=${id}`} className="btn btn-primary">
+            <FiArrowRight size={18} />
+            <span>New transaction</span>
+          </Link>
+          <button type="button" className="btn beneficiary-delete-btn" onClick={() => setDeleting(true)}>
+            <FiTrash2 size={18} aria-hidden="true" />
+            <span>Delete beneficiary</span>
+          </button>
+        </div>
+      </div>
+
+      {error && (
+        <div className="error-message">
+          <span>{error}</span>
+        </div>
+      )}
+
+      {/* Informations personnelles */}
+      <div className="form-section">
+        <div className="section-header">
+          <div className="section-icon">
+            <FiUser size={24} />
+          </div>
+          <h2>Personal information</h2>
+        </div>
+        
+        <div className="info-grid">
+          <div className="info-item">
+            <label>
+              <FiUser size={16} />
+              First name
+            </label>
+            <span>{client.firstName || '-'}</span>
+          </div>
+          <div className="info-item">
+            <label>
+              <FiUser size={16} />
+              Last name
+            </label>
+            <span>{client.lastName}</span>
+          </div>
+          {client.phone && (
+            <div className="info-item">
+              <label>
+                <FiPhone size={16} />
+                Phone
+              </label>
+              <span>{client.phone}</span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Adresse */}
+      {client.address && (client.address.street || client.address.city || client.address.postalCode || client.address.country) && (
+        <div className="form-section">
+          <div className="section-header">
+            <div className="section-icon">
+              <FiMapPin size={24} />
+            </div>
+            <h2>Address</h2>
+          </div>
+          
+          <div className="info-grid">
+            {client.address.street && (
+              <div className="info-item">
+                <label>Street</label>
+                <span>{client.address.street}</span>
+              </div>
+            )}
+            {client.address.city && (
+              <div className="info-item">
+                <label>City</label>
+                <span>{client.address.city}</span>
+              </div>
+            )}
+            {client.address.postalCode && (
+              <div className="info-item">
+                <label>Postcode</label>
+                <span>{client.address.postalCode}</span>
+              </div>
+            )}
+            {client.address.country && (
+              <div className="info-item">
+                <label>Country</label>
+                <span>{client.address.country}</span>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Informations bancaires */}
+      <div className="form-section">
+        <div className="section-header">
+          <div className="section-icon">
+            <FiCreditCard size={24} />
+          </div>
+          <h2>Bank details</h2>
+        </div>
+        
+        <div className="info-grid">
+          <div className="info-item">
+            <label>
+              <FiHome size={16} />
+              Bank name
+            </label>
+            <span>{client.bankName || 'Not provided'}</span>
+          </div>
+          <div className="info-item">
+            <label>
+              <FiCreditCard size={16} />
+              IBAN
+            </label>
+            <span className="account-number">{client.accountNumber || 'Not provided'}</span>
+          </div>
+          <div className="info-item">
+            <label>
+              <FiHash size={16} />
+              BIC / SWIFT
+            </label>
+            <span>{client.swiftCode || 'Not provided'}</span>
+          </div>
+          <div className="info-item">
+            <label>
+              <FiMapPin size={16} />
+              Bank address
+            </label>
+            <span className="bank-address">{client.bankAddress || 'Not provided'}</span>
+          </div>
+          <div className="info-item">
+            <label>
+              <FiDollarSign size={16} />
+              Balance
+            </label>
+            <span className="balance-amount">
+              {formatAmount(client.balance)} {client.currency || 'CHF'}
+            </span>
+          </div>
+          <div className="info-item">
+            <label>Status</label>
+            <span className={`status-badge status-${client.status}`}>
+              {client.status}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Opérations */}
+      <div className="form-section">
+        <div className="section-header">
+          <div className="section-icon">
+            <FiRepeat size={24} />
+          </div>
+          <h2>Transactions ({operations.length})</h2>
+        </div>
+        
+        {operations.length === 0 ? (
+          <div className="empty-state">
+            <div className="empty-icon">
+              <FiRepeat size={48} />
+            </div>
+            <p>No transactions for this beneficiary</p>
+          </div>
+        ) : (
+          <div className="operations-list">
+            {operations.map((op) => (
+              <div key={op._id} className="operation-item">
+                <div className="operation-icon">
+                  <span className="operation-letter">
+                    {op.type === 'deposit' ? 'C' : 
+                     op.type === 'withdrawal' ? 'R' :
+                     op.type === 'transfer' ? 'V' : 'P'}
+                  </span>
+                </div>
+                <div className="operation-content">
+                  <div className="operation-header">
+                    <span className={`badge badge-${op.type}`}>
+                      {op.type === 'deposit' ? "Credit (deposit)" :
+                       op.type === 'withdrawal' ? "Debit (withdrawal)" :
+                       op.type === 'transfer' ? "Debit (transfer)" : "Debit (payment)"}
+                    </span>
+                    <span className={`badge badge-${op.status}`}>
+                      {op.status}
+                    </span>
+                  </div>
+                  <div className="operation-details">
+                    <span className="operation-amount">
+                      {op.amount > 0 ? '+' : ''}{formatAmount(op.amount)} {op.currency || 'CHF'}
+                    </span>
+                    <span className="operation-date">
+                      {new Date(op.createdAt).toLocaleDateString("en-GB", {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric'
+                      })}
+                    </span>
+                  </div>
+                  {op.description && (
+                    <p className="operation-description">{op.description}</p>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+      {deleting && <DeleteBeneficiaryDialog client={client} onCancel={() => setDeleting(false)} onDeleted={() => {
+        navigate('/clients', { replace: true, state: { beneficiaryDeleted: true } })
+      }} />}
+    </div>
+  )
+}
+
+export default ClientDetail
+

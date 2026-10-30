@@ -1,0 +1,125 @@
+:where(.screen-about) .about-page {
+  min-height: 100vh;
+  background-color: var(--bg-secondary);
+  padding-bottom: 80px;
+}
+
+:where(.screen-about) .about-header {
+  background: white;
+  padding: 20px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+:where(.screen-about) .about-content {
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+:where(.screen-about) .app-branding {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+:where(.screen-about) .about-logo {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  margin-bottom: 20px;
+}
+
+:where(.screen-about) .app-branding h2 {
+  font-size: 1.5rem;
+  color: var(--text-primary);
+  margin-bottom: 5px;
+}
+
+:where(.screen-about) .version {
+  color: var(--text-tertiary);
+  font-family: monospace;
+  font-size: 0.9rem;
+}
+
+:where(.screen-about) .about-section {
+  background: white;
+  padding: 25px;
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 30px;
+}
+
+:where(.screen-about) .about-section h3 {
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+  color: var(--text-primary);
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 10px;
+}
+
+:where(.screen-about) .legal-text p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin-bottom: 15px;
+  line-height: 1.6;
+}
+
+:where(.screen-about) .legal-text p:last-child {
+  margin-bottom: 0;
+}
+
+:where(.screen-about) .feature-list {
+  display: grid;
+  gap: 15px;
+  margin-bottom: 40px;
+}
+
+:where(.screen-about) .feature-item {
+  background: white;
+  padding: 20px;
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+:where(.screen-about) .feature-icon {
+  width: 40px;
+  height: 40px;
+  background: #eff6ff;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-color);
+  font-size: 1.2rem;
+}
+
+:where(.screen-about) .feature-text h4 {
+  font-size: 1rem;
+  margin-bottom: 4px;
+  color: var(--text-primary);
+}
+
+:where(.screen-about) .feature-text p {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+:where(.screen-about) .footer-credits {
+  text-align: center;
+  color: var(--text-tertiary);
+  font-size: 0.85rem;
+  margin-top: 40px;
+}
+
+:where(.screen-about) .footer-credits p {
+  margin-bottom: 5px;
+}

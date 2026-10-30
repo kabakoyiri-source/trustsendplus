@@ -1,0 +1,471 @@
+/* Cards Page */
+:where(.screen-cards) .cards-page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  padding-bottom: 80px;
+}
+
+:where(.screen-cards) .cards-header {
+  background: white;
+  padding: 20px;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+:where(.screen-cards) .page-header-with-back {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+:where(.screen-cards) .back-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: #374151;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+:where(.screen-cards) .back-button:hover {
+  background: #f3f4f6;
+  color: #dc2626;
+}
+
+:where(.screen-cards) .page-header-with-back h1 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+:where(.screen-cards) .add-card-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #dc2626;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+:where(.screen-cards) .add-card-btn:hover {
+  background: #b91c1c;
+  transform: translateY(-1px);
+}
+
+:where(.screen-cards) .cards-content {
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+:where(.screen-cards) .cards-section, :where(.screen-cards) .add-card-section, :where(.screen-cards) .card-actions {
+  margin-bottom: 32px;
+}
+
+:where(.screen-cards) .cards-section h2, :where(.screen-cards) .add-card-section h2, :where(.screen-cards) .card-actions h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 20px 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+:where(.screen-cards) .cards-grid {
+  display: flex;
+  justify-content: center;
+  padding: 20px 0;
+}
+
+/* Bank Card Styles */
+:where(.screen-cards) .card-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  perspective: 1000px;
+}
+
+:where(.screen-cards) .bank-card {
+  width: 400px;
+  height: 250px;
+  position: relative;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  cursor: pointer;
+}
+
+:where(.screen-cards) .bank-card.flipped {
+  transform: rotateY(180deg);
+}
+
+:where(.screen-cards) .card-face {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  backface-visibility: hidden;
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+:where(.screen-cards) .card-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #d4af37 0%, #f4e5a1 50%, #d4af37 100%);
+  z-index: -1;
+}
+
+:where(.screen-cards) .card-front {
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+:where(.screen-cards) .card-back {
+  transform: rotateY(180deg);
+  background: linear-gradient(135deg, #c9a227 0%, #e6d89a 50%, #c9a227 100%);
+}
+
+:where(.screen-cards) .card-logo {
+  align-self: flex-end;
+}
+
+:where(.screen-cards) .card-chip {
+  width: 50px;
+  height: 40px;
+  background: linear-gradient(135deg, #e0c777 0%, #f9f4dc 50%, #d4af37 100%);
+  border-radius: 8px;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  margin-top: 10px;
+}
+
+:where(.screen-cards) .chip-line {
+  height: 2px;
+  background: #8b7355;
+  border-radius: 1px;
+}
+
+:where(.screen-cards) .card-number {
+  font-size: 24px;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 3px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  margin: 20px 0;
+}
+
+:where(.screen-cards) .card-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+:where(.screen-cards) .card-holder, :where(.screen-cards) .card-expiry {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+:where(.screen-cards) .label {
+  font-size: 10px;
+  text-transform: uppercase;
+  opacity: 0.8;
+  letter-spacing: 1px;
+}
+
+:where(.screen-cards) .value {
+  font-size: 16px;
+  font-weight: 400;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+:where(.screen-cards) .card-tier {
+  position: absolute;
+  top: 25px;
+  left: 25px;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+/* Verso de la carte */
+:where(.screen-cards) .magnetic-strip {
+  width: 100%;
+  height: 50px;
+  background: linear-gradient(to bottom, #2c2c2c 0%, #1a1a1a 50%, #2c2c2c 100%);
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 15px;
+}
+
+:where(.screen-cards) .rib-box-black {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+:where(.screen-cards) .rib-value-white {
+  font-family: 'Courier New', monospace;
+  font-size: 16px;
+  font-weight: 400;
+  color: #fff;
+  letter-spacing: 2px;
+}
+
+:where(.screen-cards) .signature-panel {
+  width: 100%;
+  height: 50px;
+  background: white;
+  margin-top: 20px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 15px;
+}
+
+:where(.screen-cards) .cvv-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+:where(.screen-cards) .cvv-label {
+  font-size: 12px;
+  color: #333;
+  font-weight: bold;
+}
+
+:where(.screen-cards) .cvv-value {
+  font-family: 'Courier New', monospace;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  background: #f0f0f0;
+  padding: 5px 10px;
+  border-radius: 3px;
+}
+
+:where(.screen-cards) .card-info-text {
+  text-align: center;
+  font-size: 10px;
+  color: white;
+  margin-top: 30px;
+  opacity: 0.8;
+}
+
+:where(.screen-cards) .flip-button {
+  margin-top: 30px;
+  padding: 12px 30px;
+  background: linear-gradient(135deg, #d4af37, #f4e5a1);
+  color: #333;
+  border: none;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+:where(.screen-cards) .flip-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+}
+
+/* Add Card Form */
+:where(.screen-cards) .add-card-form {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e7eb;
+}
+
+:where(.screen-cards) .form-group {
+  margin-bottom: 20px;
+}
+
+:where(.screen-cards) .form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 8px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+:where(.screen-cards) .form-group input, :where(.screen-cards) .form-group select {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  font-size: 15px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  transition: all 0.3s ease;
+}
+
+:where(.screen-cards) .form-group input:focus, :where(.screen-cards) .form-group select:focus {
+  outline: none;
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+:where(.screen-cards) .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+:where(.screen-cards) .submit-btn {
+  width: 100%;
+  background: #dc2626;
+  color: white;
+  border: none;
+  padding: 14px 20px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  margin-top: 8px;
+}
+
+:where(.screen-cards) .submit-btn:hover {
+  background: #b91c1c;
+  transform: translateY(-1px);
+}
+
+/* Card Actions */
+:where(.screen-cards) .actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+:where(.screen-cards) .action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 16px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+:where(.screen-cards) .action-btn:hover {
+  background: #f9fafb;
+  border-color: #dc2626;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+:where(.screen-cards) .action-icon {
+  font-size: 24px;
+}
+
+:where(.screen-cards) .action-btn span:last-child {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+  text-align: center;
+}
+
+:where(.screen-cards) .loading {
+  text-align: center;
+  padding: 40px;
+  color: #6b7280;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  :where(.screen-cards) .cards-content {
+    padding: 16px;
+  }
+  
+  :where(.screen-cards) .cards-header {
+    padding: 16px;
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+  
+  :where(.screen-cards) .add-card-btn {
+    align-self: flex-start;
+  }
+  
+  :where(.screen-cards) .bank-card {
+    width: 320px;
+    height: 200px;
+  }
+  
+  :where(.screen-cards) .card-number {
+    font-size: 18px;
+  }
+  
+  :where(.screen-cards) .form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  :where(.screen-cards) .actions-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  :where(.screen-cards) .bank-card {
+    width: 280px;
+    height: 175px;
+  }
+  
+  :where(.screen-cards) .card-number {
+    font-size: 16px;
+    letter-spacing: 2px;
+  }
+  
+  :where(.screen-cards) .card-face {
+    padding: 20px;
+  }
+  
+  :where(.screen-cards) .actions-grid {
+    grid-template-columns: 1fr;
+  }
+}

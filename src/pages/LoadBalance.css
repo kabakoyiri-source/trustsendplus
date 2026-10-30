@@ -1,0 +1,371 @@
+/* Variables */
+
+/* Container */
+:where(.screen-loadbalance) .load-balance-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background: var(--color-background);
+  min-height: 100vh;
+}
+
+/* Header */
+:where(.screen-loadbalance) .load-balance-header {
+  margin-bottom: 24px;
+}
+
+:where(.screen-loadbalance) .page-header-with-back {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+:where(.screen-loadbalance) .back-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  background: var(--color-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--color-text);
+  transition: all 0.3s ease;
+}
+
+:where(.screen-loadbalance) .back-button:hover {
+  background: var(--color-primary-light);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+:where(.screen-loadbalance) .header-content h1 {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 4px 0;
+}
+
+:where(.screen-loadbalance) .header-content p {
+  font-size: 14px;
+  color: var(--color-text-light);
+  margin: 0;
+}
+
+/* Error Message */
+:where(.screen-loadbalance) .error-message {
+  background: #fee2e2;
+  color: #991b1b;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  font-size: 14px;
+  border: 1px solid #fecaca;
+}
+
+/* Form */
+:where(.screen-loadbalance) .load-balance-form {
+  background: var(--color-white);
+  border-radius: var(--border-radius);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Operation Type Selector */
+:where(.screen-loadbalance) .operation-type-selector {
+  margin-bottom: 32px;
+}
+
+:where(.screen-loadbalance) .operation-type-selector h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 16px 0;
+}
+
+:where(.screen-loadbalance) .type-buttons {
+  display: flex;
+  gap: 12px;
+  background: var(--color-background);
+  padding: 4px;
+  border-radius: 8px;
+}
+
+:where(.screen-loadbalance) .type-btn {
+  flex: 1;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: transparent;
+  color: var(--color-text-light);
+  font-family: inherit;
+}
+
+:where(.screen-loadbalance) .type-btn:hover {
+  color: var(--color-text);
+}
+
+:where(.screen-loadbalance) .type-btn.active {
+  background: var(--color-white);
+  color: var(--color-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+:where(.screen-loadbalance) .form-section {
+  margin-bottom: 32px;
+}
+
+:where(.screen-loadbalance) .form-section:last-of-type {
+  margin-bottom: 0;
+}
+
+:where(.screen-loadbalance) .section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+:where(.screen-loadbalance) .section-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: var(--color-primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+}
+
+:where(.screen-loadbalance) .section-header h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+/* Form Groups */
+:where(.screen-loadbalance) .form-group {
+  margin-bottom: 24px;
+}
+
+:where(.screen-loadbalance) .form-group:last-child {
+  margin-bottom: 0;
+}
+
+:where(.screen-loadbalance) .form-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text);
+  margin-bottom: 8px;
+}
+
+:where(.screen-loadbalance) .form-group label svg {
+  color: var(--color-text-light);
+}
+
+:where(.screen-loadbalance) .required {
+  color: var(--color-primary);
+}
+
+:where(.screen-loadbalance) .form-group input,
+:where(.screen-loadbalance) .form-group textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: inherit;
+  color: var(--color-text);
+  background: var(--color-white);
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+:where(.screen-loadbalance) .form-group input:focus,
+:where(.screen-loadbalance) .form-group textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-light);
+}
+
+:where(.screen-loadbalance) .form-group input::placeholder,
+:where(.screen-loadbalance) .form-group textarea::placeholder {
+  color: var(--color-text-light);
+}
+
+:where(.screen-loadbalance) .form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+:where(.screen-loadbalance) .input-hint {
+  display: block;
+  font-size: 12px;
+  color: var(--color-text-light);
+  margin-top: 4px;
+}
+
+/* Form Actions */
+:where(.screen-loadbalance) .form-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--color-border);
+}
+
+:where(.screen-loadbalance) .btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid var(--color-border);
+  background: var(--color-white);
+  color: var(--color-text);
+  font-family: inherit;
+}
+
+:where(.screen-loadbalance) .btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+:where(.screen-loadbalance) .btn-primary {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+:where(.screen-loadbalance) .btn-primary:hover:not(:disabled) {
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
+:where(.screen-loadbalance) .btn-secondary {
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+:where(.screen-loadbalance) .btn-secondary:hover:not(:disabled) {
+  background: var(--color-background);
+  border-color: var(--color-text-light);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  :where(.screen-loadbalance) .load-balance-container {
+    padding: 16px;
+  }
+
+  :where(.screen-loadbalance) .load-balance-form {
+    padding: 20px;
+  }
+
+  :where(.screen-loadbalance) .header-content h1 {
+    font-size: 20px;
+  }
+
+  :where(.screen-loadbalance) .type-buttons {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  :where(.screen-loadbalance) .type-btn {
+    padding: 14px 16px;
+  }
+
+  :where(.screen-loadbalance) .form-actions {
+    flex-direction: column-reverse;
+  }
+
+  :where(.screen-loadbalance) .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+
+/* Credit Card Section */
+:where(.screen-loadbalance) .subsection-title {
+  margin: 30px 0 15px 0;
+  font-size: 16px;
+  color: var(--color-text);
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 10px;
+}
+
+:where(.screen-loadbalance) .form-row {
+  display: flex;
+  gap: 16px;
+}
+
+:where(.screen-loadbalance) .form-group.half {
+  flex: 1;
+}
+
+/* Modal Styles */
+:where(.screen-loadbalance) .modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+:where(.screen-loadbalance) .modal-content.security-modal {
+  background: white;
+  border-radius: var(--border-radius);
+  padding: 25px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: var(--shadow-lg);
+  animation: slideIn 0.3s ease-out;
+}
+
+:where(.screen-loadbalance) .modal-header h3 {
+  margin: 0 0 10px 0;
+  color: var(--color-text);
+}
+
+:where(.screen-loadbalance) .modal-header p {
+  color: var(--color-text-light);
+  line-height: 1.5;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+:where(.screen-loadbalance) .security-input {
+  font-size: 20px;
+  letter-spacing: 2px;
+  text-align: center;
+  font-weight: bold;
+}
+
+:where(.screen-loadbalance) .error-text {
+  color: var(--color-primary);
+  font-size: 14px;
+  margin-top: 10px;
+  text-align: center;
+}

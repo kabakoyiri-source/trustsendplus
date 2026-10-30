@@ -1,0 +1,279 @@
+/* Container */
+:where(.screen-addclient) .add-client-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px 20px;
+  min-height: 100vh;
+}
+
+/* Header */
+:where(.screen-addclient) .add-client-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+:where(.screen-addclient) .back-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: transparent;
+  border: 2px solid var(--border-color, #e2e8f0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: var(--text-primary, #1f2937);
+  flex-shrink: 0;
+}
+
+:where(.screen-addclient) .back-button:hover {
+  background: transparent;
+  border-color: var(--primary-color, #dc2626);
+  color: var(--primary-color, #dc2626);
+  transform: translateX(-2px);
+}
+
+:where(.screen-addclient) .header-content h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary, #1f2937);
+  margin: 0 0 8px 0;
+}
+
+:where(.screen-addclient) .header-content p {
+  font-size: 15px;
+  color: var(--text-secondary, #6b7280);
+  margin: 0;
+}
+
+/* Error Message */
+:where(.screen-addclient) .error-message {
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 24px;
+  color: #dc2626;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Form */
+:where(.screen-addclient) .add-client-form {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* Form Section */
+:where(.screen-addclient) .form-section {
+  background: var(--bg-primary, #ffffff);
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-color, #e2e8f0);
+}
+
+:where(.screen-addclient) .section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid var(--bg-tertiary, #f8f9fa);
+}
+
+:where(.screen-addclient) .section-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #fee2e2;
+  color: var(--primary-color, #dc2626);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:where(.screen-addclient) .section-header h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary, #1f2937);
+  margin: 0;
+}
+
+/* Form Grid */
+:where(.screen-addclient) .form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+/* Form Group */
+:where(.screen-addclient) .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+:where(.screen-addclient) .form-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary, #1f2937);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+:where(.screen-addclient) .required {
+  color: var(--primary-color, #dc2626);
+}
+
+:where(.screen-addclient) .form-group input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid var(--border-color, #e2e8f0);
+  border-radius: 12px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  background: var(--bg-primary, #ffffff);
+  color: var(--text-primary, #1f2937);
+  font-family: inherit;
+}
+
+:where(.screen-addclient) .form-group input:focus {
+  outline: none;
+  border-color: var(--primary-color, #dc2626);
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+:where(.screen-addclient) .form-group input::placeholder {
+  color: var(--text-tertiary, #9ca3af);
+}
+
+:where(.screen-addclient) .form-group input:hover {
+  border-color: #cbd5e1;
+}
+
+:where(.screen-addclient) .form-group textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid var(--border-color, #e2e8f0);
+  border-radius: 12px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  background: var(--bg-primary, #ffffff);
+  color: var(--text-primary, #1f2937);
+  font-family: inherit;
+  resize: vertical;
+  min-height: 80px;
+}
+
+:where(.screen-addclient) .form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary-color, #dc2626);
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+:where(.screen-addclient) .form-group textarea::placeholder {
+  color: var(--text-tertiary, #9ca3af);
+}
+
+:where(.screen-addclient) .form-group textarea:hover {
+  border-color: #cbd5e1;
+}
+
+/* Form Actions */
+:where(.screen-addclient) .form-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  padding-top: 8px;
+}
+
+:where(.screen-addclient) .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+:where(.screen-addclient) .btn-primary {
+  background: var(--bg-primary, #ffffff);
+  color: var(--text-primary, #1f2937);
+  border: 2px solid var(--border-color, #e2e8f0);
+}
+
+:where(.screen-addclient) .btn-primary:hover:not(:disabled) {
+  background: transparent;
+  border-color: var(--text-primary, #1f2937);
+}
+
+:where(.screen-addclient) .btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+:where(.screen-addclient) .btn-secondary {
+  background: transparent;
+  color: var(--text-primary, #1f2937);
+  border: 2px solid var(--border-color, #e2e8f0);
+}
+
+:where(.screen-addclient) .btn-secondary:hover {
+  background: transparent;
+  border-color: var(--text-primary, #1f2937);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  :where(.screen-addclient) .add-client-container {
+    padding: 16px;
+  }
+
+  :where(.screen-addclient) .form-section {
+    padding: 20px;
+  }
+
+  :where(.screen-addclient) .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  :where(.screen-addclient) .form-actions {
+    flex-direction: column-reverse;
+  }
+
+  :where(.screen-addclient) .form-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  :where(.screen-addclient) .header-content h1 {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  :where(.screen-addclient) .add-client-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  :where(.screen-addclient) .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
+
