@@ -4,14 +4,16 @@
 
 La page officielle https://trustwallet.com/download consultée le 30 octobre 2026 affiche iOS 26.43.14. La provenance de version des captures utilisateur n'est pas vérifiée. Elles constituent la référence visuelle principale : fond clair, grands montants, cartes gris perle, quatre actions rapides, accent bleu violet, navigation flottante. Les écrans complémentaires sont des propositions originales, sans prétendre reproduire une version officielle.
 
-Direction : typographie système iOS, mise en page mobile, marges de 22 px, cibles tactiles généreuses, surfaces arrondies de 17 à 28 px, modes clair et sombre, zones de sécurité iOS. Navigation : Accueil, Marchés, Earn, Explorer, Recherche. Les réglages et l'activité restent accessibles depuis l'en-tête.
+L’accueil après le PIN suit les trois captures de référence : carte de portefeuille jaune « Youg client », historique et scan, annonce bStocks, solde en euros, quatre actions, Tokens, Contrats perpétuels, Prédictions, Trust Wallet AI, liste de surveillance et personnalisation. L’en-tête remplace le nom par le solde pendant le défilement. La navigation flottante comporte trois icônes (Accueil, Marchés, Earn) et une recherche séparée. Explorer est accessible depuis Earn ; les réglages sont accessibles depuis le sélecteur de portefeuille.
+
+La mise en page utilise des marges de 16 px, des icônes de tokens vectorielles, une police Inter locale avec sa licence, des cartes gris perle et des zones de sécurité iOS. Le mode sombre et les données locales sont conservés. La barre d’état et les indicateurs système du téléphone ne sont pas dessinés dans la page. Les trois captures de comparaison sont enregistrées dans `qa/concept/reference-01-home.png`, `reference-02-scroll.png` et `reference-03-watchlist.png` ; elles simulent une zone supérieure de sécurité de 59 px.
 
 ## Inventaire réalisé
 
 | Famille | Écrans et interactions |
 | --- | --- |
 | Entrée | Accès direct au code PIN à six chiffres, écran épuré suivant la référence, clavier tactile et physique, erreur PIN, verrouillage |
-| Portefeuille | Solde masquable, liste des tokens, actifs favoris, sélection réseau, personnalisation |
+| Portefeuille | Accueil conforme à l’ordre des captures, solde masquable, en-tête au défilement, tokens, contrats perpétuels, prédictions, assistant, surveillance et personnalisation |
 | Marchés | Tendances, favoris, gagnants, recherche, fiches d'actifs, six périodes de graphique et inspection au pointeur |
 | Envoi | Destinataire fictif, carnet de trois contacts, sélection d'actif, montant, maximum, solde insuffisant, vérification, confirmation |
 | Réception | Motif décoratif explicitement non scannable, identifiant fictif copiable, crédit simulé |
@@ -34,7 +36,7 @@ Direction : typographie système iOS, mise en page mobile, marges de 22 px, cibl
 - Les portefeuilles, soldes, préférences et opérations persistent dans localStorage sous `trust-concept-local-v1`. L'allocation Earn n'est conservée que pendant la session.
 - Ancien projet bancaire conservé dans les anciens modules de `src` pour référence. Il n'est plus importé par `src/main.jsx`. Ses tests historiques ne valident pas le nouveau concept.
 - iPhone Safari et installation physique doivent être contrôlés sur appareil réel après publication. Les tests automatisés utilisent WebKit et des dimensions mobiles, ce qui ne remplace pas un iPhone.
-- Aucune affiliation à Trust Wallet. Les logos de tokens sont des représentations typographiques locales, pas des ressources officielles.
+- Aucune affiliation à Trust Wallet. Les logos de tokens et les petites illustrations sont des dessins vectoriels locaux.
 
 ## Lancer et valider
 

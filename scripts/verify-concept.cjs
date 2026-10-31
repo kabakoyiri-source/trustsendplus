@@ -27,17 +27,27 @@ async function main(){
   assert(!new RegExp('^'+rewrites[0].source+'$').test(file),'Vercel must not rewrite the icon to HTML');
  }
  assert(!new RegExp('^'+rewrites[0].source+'$').test('/apple-touch-icon.png'),'Keep the iOS fallback available as an image');
+ for(const weight of ['Regular','Medium','SemiBold','ExtraBold']){
+  const font=`/fonts/Inter-${weight}.woff2`;
+  assert(cached.includes(font),'Typography must be available offline');
+  assert(!new RegExp('^'+rewrites[0].source+'$').test(font),'Vercel must serve the actual font file');
+ }
  const browser=await webkit.launch({headless:true});
  const context=await browser.newContext({viewport:{width:393,height:852},isMobile:true,hasTouch:true,deviceScaleFactor:2,serviceWorkers:'block',reducedMotion:'reduce'});
  // Serve the real production files through browser routing: this environment blocks WebKit loopback connections.
  await context.route('https://concept.test/**',async route=>{let file=path.join(dist,decodeURIComponent(new URL(route.request().url()).pathname));if(!fs.existsSync(file)||!fs.statSync(file).isFile())file=path.join(dist,'index.html');await route.fulfill({path:file,contentType:({'.html':'text/html','.js':'application/javascript','.css':'text/css','.png':'image/png','.svg':'image/svg+xml','.json':'application/json'})[path.extname(file)]||'application/octet-stream'})});
  const page=await context.newPage();const errors=[], external=[];
  page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{if(!r.url().startsWith(base)&&!r.url().startsWith('data:'))external.push(r.url())});
- const click=label=>page.getByRole('button',{name:label,exact:true}).click();
+ const click=async label=>{
+  if(label==='Réglages'&&!await page.getByRole('button',{name:label,exact:true}).count())await page.locator('.wallet-selector').click();
+  if(label==='Explorer'&&!await page.getByRole('button',{name:label,exact:true}).count())await page.getByRole('button',{name:'Earn',exact:true}).click();
+  await page.getByRole('button',{name:label,exact:true}).click();
+ };
  const back=()=>click('Retour');
  async function unlock(){for(const k of '787878')await click(k)}
  try{
  await page.goto(base);
+ await page.getByRole('heading',{name:'Saisir le code d’accès'}).waitFor({state:'visible'});
  assert(await page.getByRole('heading',{name:'Saisir le code d’accès'}).isVisible(),'First visit must open the PIN screen directly');
  assert.equal(await page.getByRole('button',{name:'Explorer le concept'}).count(),0);
  assert.equal(await page.locator('.lock-screen .brand-logo, .lock-top, .lock-orb, .lock-footer, .pin-hint').count(),0,'PIN screen must stay minimal');
@@ -56,6 +66,23 @@ async function main(){
  for(const k of '111111')await click(k);assert(await page.getByRole('status').textContent().then(t=>t.includes('incorrect')));
  await page.screenshot({path:path.join(out,'02-pin.png')});await unlock();
  assert(await page.getByTestId('wallet-app').isVisible());
+ assert.equal(await page.locator('.balance-block h1').textContent(),'€223,20');
+ assert.equal(await page.locator('.wallet-selector').textContent(),'Youg client');
+ assert.equal(await page.locator('.nav-pill button').count(),3);
+ assert.deepEqual(await page.locator('.wallet-home .section-heading h2').allTextContents(),['Tokens','Contrats perpétuels','Prédictions','Liste de surveillance']);
+ await page.locator('.wallet-app').evaluate(el=>el.style.setProperty('--wallet-safe-top','59px'));
+ await page.screenshot({path:path.join(out,'reference-01-home.png')});
+ await page.locator('main').evaluate(el=>{el.scrollTop=550});
+ await page.waitForFunction(()=>document.querySelector('.wallet-header').classList.contains('is-collapsed'));
+ await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+ assert.equal(await page.locator('main').evaluate(el=>el.scrollTop),550,'Collapsing the header must not shift the scroll position');
+ assert.equal(await page.locator('.wallet-selector').textContent(),'€223,20');
+ await page.screenshot({path:path.join(out,'reference-02-scroll.png')});
+ await page.locator('main').evaluate(el=>{el.scrollTop=840});
+ await page.screenshot({path:path.join(out,'reference-03-watchlist.png')});
+ await page.locator('.wallet-app').evaluate(el=>el.style.removeProperty('--wallet-safe-top'));
+ await page.locator('main').evaluate(el=>{el.scrollTop=0});
+ await page.waitForFunction(()=>!document.querySelector('.wallet-header').classList.contains('is-collapsed'));
  await page.screenshot({path:path.join(out,'03-home.png')});
  await click('Réglages');await page.getByRole('button',{name:'Ajouter des fonds fictifs Créditer le portefeuille de démonstration'}).click();
  await page.locator('input[type=number]').fill('1000');await click('Ajouter des fonds fictifs');await back();await back();
