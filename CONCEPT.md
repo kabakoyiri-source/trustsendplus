@@ -47,6 +47,8 @@ npm run verify:concept
 
 Les captures de vérification sont générées dans `qa/concept`.
 
+Les icônes sont générées par `node scripts/generate-concept-icons.cjs`. La révision `v3` utilise des URL distinctes pour le SVG compact, l’icône iPhone et les icônes Android. L’icône Android adaptative a ses propres marges. Toute modification ultérieure des icônes doit aussi changer leur URL dans le manifeste et les liens HTML : remplacer seulement les pixels d’une image à la même adresse ne suffit pas pour signaler une mise à jour d’icône aux versions récentes de Chrome. Le fallback `apple-touch-icon.png` est conservé, et les icônes référencées sont incluses dans le cache hors ligne.
+
 La suite WebKit sert les véritables fichiers compilés via interception locale des requêtes du navigateur, car les connexions loopback de WebKit ne sont pas disponibles dans cet environnement. Elle couvre le PIN, les erreurs de solde, les crédits fictifs, envois, swaps, achats, staking, historique, recherche, préférences, persistance, portefeuilles, réseaux/tokens, parcours Web3, modales et réinitialisation. Elle contrôle aussi cinq dimensions d'écran (320, 375, 393, 430 px et paysage 844 × 390), la position de la navigation, l'absence de débordement horizontal, les erreurs JavaScript et les requêtes externes. Le manifeste, les ressources du cache de production et l'exclusion des icônes des réécritures Vercel sont également vérifiés.
 
 Cela ne valide pas l'installation physique sur iPhone, les notifications système ou le comportement réel du service worker dans Safari installé. Ces contrôles restent à faire après hébergement HTTPS.

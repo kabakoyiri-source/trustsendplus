@@ -16,7 +16,17 @@ async function main(){
  assert(cached.some(p=>p.startsWith('/assets/')&&p.endsWith('.css')),'Offline cache must contain the production CSS');
  for(const file of [...cached,...manifest.icons.map(i=>i.src)])assert(fs.existsSync(path.join(dist,file==='/'?'index.html':file)),`Missing PWA resource: ${file}`);
  const rewrites=JSON.parse(fs.readFileSync(path.join(__dirname,'../vercel.json'),'utf8')).rewrites;
- for(const icon of manifest.icons)assert(!new RegExp('^'+rewrites[0].source+'$').test(icon.src),'Vercel must not rewrite the icon to HTML');
+ const html=fs.readFileSync(path.join(dist,'index.html'),'utf8');
+ const htmlIcons=[...html.matchAll(/<link\b[^>]*rel="(?:icon|apple-touch-icon)"[^>]*href="([^"]+)"/g)].map(match=>match[1]);
+ assert.equal(htmlIcons.length,2,'Declare both the favicon and iPhone icon');
+ assert(manifest.icons.some(icon=>icon.purpose==='maskable'),'Android must have a dedicated maskable icon');
+ assert(manifest.icons.every(icon=>icon.purpose==='any'||icon.purpose==='maskable'),'Do not reuse one file for both icon purposes');
+ for(const file of [...manifest.icons.map(icon=>icon.src),...htmlIcons]){
+  assert(/-v\d+\.(png|svg)$/.test(file),'Icon URLs must be versioned so installed apps can detect a change');
+  assert(cached.includes(file),`Icon must remain available offline: ${file}`);
+  assert(!new RegExp('^'+rewrites[0].source+'$').test(file),'Vercel must not rewrite the icon to HTML');
+ }
+ assert(!new RegExp('^'+rewrites[0].source+'$').test('/apple-touch-icon.png'),'Keep the iOS fallback available as an image');
  const browser=await webkit.launch({headless:true});
  const context=await browser.newContext({viewport:{width:393,height:852},isMobile:true,hasTouch:true,deviceScaleFactor:2,serviceWorkers:'block',reducedMotion:'reduce'});
  // Serve the real production files through browser routing: this environment blocks WebKit loopback connections.
