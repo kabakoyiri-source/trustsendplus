@@ -13,7 +13,7 @@ export function pwaBuild() {
     generateBundle(_options, bundle) {
       const manifest = JSON.parse(fs.readFileSync(path.join(publicDir, 'manifest.json'), 'utf8'))
       const staticPaths = [...new Set([
-        '/manifest.json', '/concept-icon.svg', ...manifest.icons.map(icon => icon.src),
+        '/manifest.json', '/concept-icon.svg', '/concept-icon-180.png', ...manifest.icons.map(icon => icon.src),
       ])]
       const template = fs.readFileSync(path.join(publicDir, 'service-worker.js'), 'utf8')
       const hash = createHash('sha256').update(template)
