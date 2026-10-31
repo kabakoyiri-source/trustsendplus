@@ -1,1 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512"><rect width="512" height="512" rx="112" fill="#4030ff"/><path d="M256 100 380 146v104c0 76-54 133-124 164-70-31-124-88-124-164V146Z" fill="#fff"/><path d="m208 254 34 34 68-76" fill="none" stroke="#4030ff" stroke-width="25" stroke-linecap="round" stroke-linejoin="round"/><circle cx="380" cy="385" r="55" fill="#c6ff6a"/><text x="380" y="401" text-anchor="middle" font-family="Arial" font-size="44" font-weight="bold" fill="#18231a">D</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="447" height="447" viewBox="0 0 447 447">
+  <defs>
+    <linearGradient id="shield-gradient" x1="312" y1="36" x2="240" y2="399" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#42ffa3"/>
+      <stop offset=".43" stop-color="#009dff"/>
+      <stop offset=".76" stop-color="#0038ff"/>
+      <stop offset="1" stop-color="#0500ff"/>
+    </linearGradient>
+  </defs>
+  <path d="M223.5 22 45.5 80v130c0 94 71 169 178 215Z" fill="#0500ff"/>
+  <path d="m223.5 22 178 58v130c0 94-71 169-178 215Z" fill="url(#shield-gradient)"/>
+</svg>

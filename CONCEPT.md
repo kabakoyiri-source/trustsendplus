@@ -10,7 +10,7 @@ Direction : typographie système iOS, mise en page mobile, marges de 22 px, cibl
 
 | Famille | Écrans et interactions |
 | --- | --- |
-| Entrée | Introduction, code PIN à six chiffres, erreur PIN, verrouillage |
+| Entrée | Accès direct au code PIN à six chiffres, écran épuré suivant la référence, clavier tactile et physique, erreur PIN, verrouillage |
 | Portefeuille | Solde masquable, liste des tokens, actifs favoris, sélection réseau, personnalisation |
 | Marchés | Tendances, favoris, gagnants, recherche, fiches d'actifs, six périodes de graphique et inspection au pointeur |
 | Envoi | Destinataire fictif, carnet de trois contacts, sélection d'actif, montant, maximum, solde insuffisant, vérification, confirmation |
@@ -24,7 +24,7 @@ Direction : typographie système iOS, mise en page mobile, marges de 22 px, cibl
 | Portefeuilles | Ajout d'espace, sélection, renommage, soldes indépendants |
 | Réglages | Fonds fictifs, tokens, réseaux, notifications locales, sécurité, préférences, profil, installation, à propos |
 | Modales | Réseaux, actifs, devises, tolérance, connexion, création/renommage, réinitialisation avec confirmation |
-| PWA | Nom et icônes dédiés, manifeste, shell de chargement, cache du build, mode standalone |
+| PWA | Bouclier bleu avec dégradé vert, icônes et favicon assortis, manifeste, cache du build, mode standalone |
 
 ## Périmètre et limites
 

@@ -27,8 +27,22 @@ async function main(){
  const back=()=>click('Retour');
  async function unlock(){for(const k of '787878')await click(k)}
  try{
- await page.goto(base);await page.screenshot({path:path.join(out,'01-onboarding.png')});
- await page.getByRole('button',{name:'Explorer le concept'}).click();
+ await page.goto(base);
+ assert(await page.getByRole('heading',{name:'Saisir le code d’accès'}).isVisible(),'First visit must open the PIN screen directly');
+ assert.equal(await page.getByRole('button',{name:'Explorer le concept'}).count(),0);
+ assert.equal(await page.locator('.lock-screen .brand-logo, .lock-top, .lock-orb, .lock-footer, .pin-hint').count(),0,'PIN screen must stay minimal');
+ assert.equal(await page.locator('.pin-slots > span').count(),6);
+ await page.screenshot({path:path.join(out,'01-pin.png')});
+ for(const size of [{width:320,height:568},{width:375,height:812},{width:393,height:852},{width:430,height:932},{width:844,height:390}]){
+  await page.setViewportSize(size);
+  const layout=await page.locator('.lock-screen').evaluate(el=>{const keys=[...el.querySelectorAll('.keypad button')];return {fits:el.scrollHeight<=el.clientHeight+1&&el.scrollWidth<=el.clientWidth+1,keysFit:keys.every(k=>{const r=k.getBoundingClientRect();return r.top>=0&&r.bottom<=innerHeight+1&&r.left>=0&&r.right<=innerWidth+1&&r.height>=44})}});
+  assert(layout.fits&&layout.keysFit,`PIN layout must fit with usable keys: ${JSON.stringify({size,layout})}`);
+  await page.screenshot({path:path.join(out,`pin-${size.width}.png`)});
+ }
+ await page.setViewportSize({width:393,height:852});
+ await page.keyboard.type('78');assert.equal(await page.locator('.pin-slots').getAttribute('aria-label'),'2 chiffres saisis sur 6');
+ await page.keyboard.press('Backspace');assert.equal(await page.locator('.pin-slots').getAttribute('aria-label'),'1 chiffres saisis sur 6');
+ await click('Effacer');
  for(const k of '111111')await click(k);assert(await page.getByRole('status').textContent().then(t=>t.includes('incorrect')));
  await page.screenshot({path:path.join(out,'02-pin.png')});await unlock();
  assert(await page.getByTestId('wallet-app').isVisible());
@@ -47,7 +61,7 @@ async function main(){
  await click('Marchés');await page.locator('.asset-main').filter({hasText:'BTC'}).click();await click('1S');await click('Favori');await page.screenshot({path:path.join(out,'05-asset.png')});await back();
  await click('Accueil');await click('Réglages');await page.getByRole('button',{name:'Préférences Clair'}).click();await page.getByRole('button',{name:'Sombre'}).click();await page.screenshot({path:path.join(out,'06-dark.png')});await back();
  await page.getByRole('button',{name:'Portefeuilles 1'}).click();await page.getByRole('button',{name:'Ajouter un espace de démo'}).click();await page.getByPlaceholder('Ex. : Mes projets').fill('Deuxième espace');await page.getByRole('button',{name:'Enregistrer',exact:true}).click();assert.equal(await page.locator('.wallet-card').count(),2);await back();await back();assert((await page.locator('.balance-block h1').textContent()).includes('0,00'));
- await page.reload();await unlock();assert((await page.locator('.wallet-selector').textContent()).includes('Deuxième espace'));assert.equal(await page.locator('html').getAttribute('data-theme'),'dark');
+ await page.reload();assert.equal(await page.locator('.lock-screen').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(252, 252, 252)');await page.keyboard.type('787878');assert((await page.locator('.wallet-selector').textContent()).includes('Deuxième espace'));assert.equal(await page.locator('html').getAttribute('data-theme'),'dark');
  await click('Réglages');
  for(const name of ['Gérer les tokens','Réseaux','Sécurité','Notifications','Installer sur iPhone','À propos du concept']){await page.getByRole('button',{name,exact:true}).click();assert((await page.locator('main').innerText()).length>100);await back()}
  await back();await click('Accueil');
