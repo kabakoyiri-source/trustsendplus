@@ -2,6 +2,7 @@ const assert = require('node:assert/strict');
 const path = require('node:path');
 const fs = require('node:fs');
 const { marketFixture,perpetualFixture } = require('./market-fixture.cjs');
+const {watchFixture}=require('./watch-fixture.cjs');
 process.env.PLAYWRIGHT_BROWSERS_PATH ||= path.join(__dirname, '../qa/browsers');
 const { webkit } = require('playwright');
 const base = 'https://concept.test';
@@ -41,11 +42,14 @@ async function main(){
   const url=new URL(route.request().url());
   if(url.pathname==='/api/market')return route.fulfill({status:marketOffline?503:200,json:marketOffline?{error:'Temporary market outage'}:marketFixture(url.href)});
   if(url.pathname==='/api/perpetuals')return route.fulfill({json:perpetualFixture()});
+  if(url.pathname==='/api/watch')return route.fulfill({json:watchFixture(url.searchParams.get('network'),url.searchParams.get('address'))});
   let file=path.join(dist,decodeURIComponent(url.pathname));
   if(!fs.existsSync(file)||!fs.statSync(file).isFile())file=path.join(dist,'index.html');
   await route.fulfill({path:file,contentType:({'.html':'text/html','.js':'application/javascript','.css':'text/css','.png':'image/png','.svg':'image/svg+xml','.json':'application/json','.woff2':'font/woff2'})[path.extname(file)]||'application/octet-stream'});
  });
  await context.addInitScript(()=>{
+  // Exercise local trading on a demo wallet; the default watch-backed main is covered separately.
+  if(!localStorage.getItem('trust-concept-local-v1'))localStorage.setItem('trust-concept-local-v1',JSON.stringify({wallets:[{id:'main',name:'Youg client',balances:{usdc:248.715418,eth:0}}],active:'main',mainStaticSeeded:true}));
   Object.defineProperty(navigator,'clipboard',{configurable:true,value:{readText:async()=>window.__clipboard||'',writeText:async value=>{window.__copied=value}}});
   Object.defineProperty(navigator,'share',{configurable:true,value:async value=>{window.__shared=value}});
  });
@@ -147,7 +151,7 @@ async function main(){
  await page.getByRole('button',{name:'Assistant du concept Une visite guidée de votre prototype'}).click();await page.getByRole('button',{name:'Comment fonctionne la démo ?'}).click();await back();await back();
  await click('Marchés');await page.getByRole('button',{name:'Contrats perpétuels Découvrir l’interface de trading'}).click();await page.locator('.perps-token').first().click();assert(await page.getByRole('dialog').isVisible());await click('Fermer');await click('Marchés');
  await page.getByRole('button',{name:'Prédictions Explorer les scénarios fictifs'}).click();await page.getByRole('button',{name:'Oui · 62 %'}).first().click();await back();
- await click('Accueil');await click('Réglages');await page.getByRole('button',{name:'Sécurité',exact:true}).click();await page.getByRole('button',{name:'Réinitialiser les données de démo'}).click();await page.getByRole('button',{name:'Conserver mes données'}).click();assert.equal(await page.getByRole('dialog').count(),0);await page.getByRole('button',{name:'Réinitialiser les données de démo'}).click();await page.getByRole('button',{name:'Réinitialiser la démo',exact:true}).click();assert.equal(await page.locator('html').getAttribute('data-theme'),'light');assert.equal(await page.locator('.asset-row').count(),6);
+ await click('Accueil');await click('Réglages');await page.getByRole('button',{name:'Sécurité',exact:true}).click();await page.getByRole('button',{name:'Réinitialiser les données de démo'}).click();await page.getByRole('button',{name:'Conserver mes données'}).click();assert.equal(await page.getByRole('dialog').count(),0);await page.getByRole('button',{name:'Réinitialiser les données de démo'}).click();await page.getByRole('button',{name:'Réinitialiser la démo',exact:true}).click();assert.equal(await page.locator('html').getAttribute('data-theme'),'light');await page.locator('.fixed-home .home-tokens .asset-main').first().waitFor();assert.equal(await page.locator('.fixed-home .asset-row').count(),5);assert((await page.locator('.wallet-selector').textContent()).includes('Young client'));
  await page.getByRole('status').waitFor({state:'hidden'});
  for(const size of [{width:320,height:568},{width:375,height:812},{width:393,height:852},{width:430,height:932},{width:844,height:390}]){await page.setViewportSize(size);assert(await page.locator('.bottom-nav').evaluate(el=>el.getBoundingClientRect().bottom<=window.innerHeight+1),'Navigation below viewport');await page.screenshot({path:path.join(out,`responsive-${size.width}.png`)});const overflow=await page.evaluate(()=>{const m=document.querySelector('main'),r=m.getBoundingClientRect();return {ok:m.scrollWidth<=m.clientWidth+1,width:m.clientWidth,scroll:m.scrollWidth,offenders:[...m.querySelectorAll('*')].filter(e=>e.getBoundingClientRect().right>r.right+1).map(e=>({tag:e.tagName,cls:typeof e.className==='string'?e.className:'svg',right:e.getBoundingClientRect().right})).slice(0,12)}});assert(overflow.ok,`Horizontal overflow ${size.width}: ${JSON.stringify(overflow)}`)}
  assert.deepEqual(errors,[]);assert.deepEqual(external,[]);

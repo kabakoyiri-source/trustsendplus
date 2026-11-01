@@ -123,20 +123,20 @@
 .watch-copy-address > svg { height: 15px; width: 15px; stroke-width: 1.6; }
 .watch-information p { color: var(--muted); font-size: 12px; line-height: 19px; margin: 14px 0; }
 .watch-information .watch-public-address { color: var(--text); font-size: 14px; overflow-wrap: anywhere; }
-.wallet-home.watch-home .balance-block { padding: 10px 0 34px; }
-.wallet-home.watch-home .balance-block h1 { font-size: clamp(21px,var(--watch-balance-size,10.2cqw),40px); font-weight: 600; line-height: 1.15; letter-spacing: -.035em; white-space: nowrap; }
-.wallet-home.watch-home .balance-block p { font-size: 15px; margin-top: 10px; gap: 4px; letter-spacing: -.02em; }
-.wallet-home.watch-home .home-tokens { margin-top: 0; }
-.wallet-home.watch-home .home-tokens .section-heading { margin-bottom: 16px; }
-.wallet-home.watch-home .asset-main { column-gap: 14px; min-height: 66px; }
-.wallet-home.watch-home .row-text { min-width: 0; flex: 1 1 0%; }
-.wallet-home.watch-home .row-text strong { font-size: 16px; line-height: 22px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.wallet-home.watch-home .row-text small { font-size: 12px; line-height: 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.wallet-home.watch-home .asset-value { flex: 0 0 auto; max-width: 52%; min-width: 0; }
-.wallet-home.watch-home .asset-value strong { font-size: 16px; line-height: 22px; font-weight: 600; white-space: nowrap; letter-spacing: -.025em; overflow: hidden; text-overflow: ellipsis; }
-.wallet-home.watch-home .asset-value small { font-size: 12px; line-height: 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.wallet-home.watch-home .wallet-ai { margin-top: 38px; }
-.wallet-home.watch-home .home-watchlist { margin-top: 30px; }
+.wallet-home:is(.watch-home,.fixed-home) .balance-block { padding: 10px 0 34px; }
+.wallet-home:is(.watch-home,.fixed-home) .balance-block h1 { font-size: clamp(21px,var(--watch-balance-size,10.2cqw),40px); font-weight: 600; line-height: 1.15; letter-spacing: -.035em; white-space: nowrap; }
+.wallet-home:is(.watch-home,.fixed-home) .balance-block p { font-size: 15px; margin-top: 10px; gap: 4px; letter-spacing: -.02em; }
+.wallet-home:is(.watch-home,.fixed-home) .home-tokens { margin-top: 0; }
+.wallet-home:is(.watch-home,.fixed-home) .home-tokens .section-heading { margin-bottom: 16px; }
+.wallet-home:is(.watch-home,.fixed-home) .asset-main { column-gap: 14px; min-height: 66px; }
+.wallet-home:is(.watch-home,.fixed-home) .row-text { min-width: 0; flex: 1 1 0%; }
+.wallet-home:is(.watch-home,.fixed-home) .row-text strong { font-size: 16px; line-height: 22px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wallet-home:is(.watch-home,.fixed-home) .row-text small { font-size: 12px; line-height: 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wallet-home:is(.watch-home,.fixed-home) .asset-value { flex: 0 0 auto; max-width: 52%; min-width: 0; }
+.wallet-home:is(.watch-home,.fixed-home) .asset-value strong { font-size: 16px; line-height: 22px; font-weight: 600; white-space: nowrap; letter-spacing: -.025em; overflow: hidden; text-overflow: ellipsis; }
+.wallet-home:is(.watch-home,.fixed-home) .asset-value small { font-size: 12px; line-height: 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wallet-home:is(.watch-home,.fixed-home) .wallet-ai { margin-top: 38px; }
+.wallet-home:is(.watch-home,.fixed-home) .home-watchlist { margin-top: 30px; }
 
 /* Shared bottom menu measured against the lighter reference. */
 .wallet-app .wallet-navigation .nav-pill { border: 1px solid var(--border); box-shadow: none; background: color-mix(in srgb,var(--bg) 94%,transparent); }
@@ -168,9 +168,9 @@
   .activity-row-value { font-size: 15px; }
   .activity-row-name > strong { font-size: 15px; }
   .activity-coin { height: 38px; width: 38px; }
-  .wallet-home.watch-home .asset-main { column-gap: 10px; }
-  .wallet-home.watch-home .row-text strong,.wallet-home.watch-home .asset-value strong { font-size: 14px; }
-  .wallet-home.watch-home .row-text small,.wallet-home.watch-home .asset-value small { font-size: 10px; }
+  .wallet-home:is(.watch-home,.fixed-home) .asset-main { column-gap: 10px; }
+  .wallet-home:is(.watch-home,.fixed-home) .row-text strong,.wallet-home:is(.watch-home,.fixed-home) .asset-value strong { font-size: 14px; }
+  .wallet-home:is(.watch-home,.fixed-home) .row-text small,.wallet-home:is(.watch-home,.fixed-home) .asset-value small { font-size: 10px; }
 }
 @media(max-height:650px) {
   .manager-naming-content { padding-top: 14px; }

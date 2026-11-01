@@ -2,11 +2,12 @@ import React,{useState} from 'react'
 import {FiAlertCircle,FiCheck,FiChevronRight,FiCopy,FiUpload,FiX} from 'react-icons/fi'
 import {TokenArtwork} from './WalletArtwork'
 import AssetIcon from './AssetIcon'
+import DEFAULT_WATCH from './default-watch-wallet.json'
 
-const DEMO_ADDRESSES={eth:'0xDEMO4EE9b488B608F5240FeA359525cA44c4ba22A',usdc:'0xDEMO4EE9b488B608F5240FeA359525cA44c4ba22A',bnb:'0xDEMO4EE9b488B608F5240FeA359525cA44c4ba22A',btc:'bc1qDEMO-bitcoin-no-real-deposits-000000',sol:'DEMO-Solana-NoRealDeposits-11111111111111',usdt:'T-DEMO-Tron-NoRealDeposits-111111111111',pol:'0xDEMO4EE9b488B608F5240FeA359525cA44c4ba22A'}
+const RECEIVE_ADDRESSES={eth:DEFAULT_WATCH.watch.address,usdc:DEFAULT_WATCH.watch.address,bnb:DEFAULT_WATCH.watch.address,btc:'bc1qDEMO-bitcoin-no-real-deposits-000000',sol:'DEMO-Solana-NoRealDeposits-11111111111111',usdt:'T-DEMO-Tron-NoRealDeposits-111111111111',pol:DEFAULT_WATCH.watch.address}
 
 export default function ReceivePanel({asset,assets,walletId,addresses,onAddress,onAsset,onClose,onDeposit,say,readOnlyAddress}) {
-  const key=`${walletId}:${asset.id}`,address=addresses?.[key]||readOnlyAddress||DEMO_ADDRESSES[asset.id]||DEMO_ADDRESSES.eth
+  const key=`${walletId}:${asset.id}`,address=addresses?.[key]||readOnlyAddress||RECEIVE_ADDRESSES[asset.id]||RECEIVE_ADDRESSES.eth
   const networkIcon={Ethereum:'eth',Bitcoin:'btc',Solana:'sol','BNB Smart Chain':'bnb',Tron:'usdt',Polygon:'pol'}[asset.network]||asset.id
   const [picker,setPicker]=useState(false),[editing,setEditing]=useState(false),[draft,setDraft]=useState('')
   async function copy(){try{await navigator.clipboard.writeText(address);say('Adresse copiée')}catch{say('Copie indisponible. Sélectionnez l’adresse affichée.')}}

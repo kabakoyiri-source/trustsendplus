@@ -14,7 +14,7 @@ async function main(){
  try{
   const context=await browser.newContext({viewport:{width:393,height:852},isMobile:true,hasTouch:true,deviceScaleFactor:2,serviceWorkers:'block',reducedMotion:'reduce'});
   await context.addInitScript(()=>{
-   localStorage.setItem('trust-concept-local-v1',JSON.stringify({wallets:[{id:'main',name:'Youg client',balances:{usdc:1000,eth:.00063687,btc:0,sol:0,bnb:0,usdt:0,pol:0}}],active:'main',currency:'USD'}));
+   localStorage.setItem('trust-concept-local-v1',JSON.stringify({wallets:[{id:'main',name:'Youg client',balances:{usdc:1000,eth:.00063687,btc:0,sol:0,bnb:0,usdt:0,pol:0}}],active:'main',mainStaticSeeded:true,currency:'USD'}));
    Object.defineProperty(navigator,'clipboard',{configurable:true,value:{readText:async()=>window.__clipboard||'',writeText:async text=>{window.__copied=text}}});
   });
   await context.route('https://reference.test/**',async route=>{

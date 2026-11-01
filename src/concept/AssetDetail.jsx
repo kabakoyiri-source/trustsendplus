@@ -8,7 +8,7 @@ import {ScanGlyph,SparkleGlyph} from './WalletArtwork'
 
 function plainText(value){const document=new DOMParser().parseFromString(value||'','text/html');document.querySelectorAll('script,style').forEach(node=>node.remove());return document.body.textContent||''}
 
-export default function AssetDetail({asset,currency,balance,range,onRange,onAction,onHistory,history,onTransaction,onCurrency}) {
+export default function AssetDetail({asset,currency,balance,balancePrice=asset.price,range,onRange,onAction,onHistory,history,onTransaction,onCurrency}) {
   const metadata=useMarketResource({type:'detail',asset:asset.catalogId||asset.id,currency:currency.toLowerCase()},!asset.remote||Boolean(asset.catalogId))
   const [summary,setSummary]=useState(null),[expanded,setExpanded]=useState(false)
   const description=useMemo(()=>plainText(metadata.data?.description),[metadata.data])
@@ -22,7 +22,7 @@ export default function AssetDetail({asset,currency,balance,range,onRange,onActi
   return <article className="asset-detail">
     <div className="asset-overview"><span className="asset-detail-coin"><AssetIcon asset={asset}/></span><span className="asset-detail-name"><strong>{asset.symbol}</strong><small>{asset.network}</small></span><div className="asset-detail-price"><strong><button aria-label="Changer la devise" onClick={onCurrency}><FiRefreshCw/></button>{money(asset.price)}</strong><small className={(change??0)>=0?'positive':'negative'}>{Number.isFinite(change)?`${change>=0?'+':'-'}${money(Math.abs(change))} (${Math.abs(percentage).toFixed(2)}%)`:'—'}</small></div></div>
     <LiveChart asset={asset} currency={currency} range={range} onRange={onRange} onSummary={setSummary}/>
-    <section className="asset-holding"><span>Balance</span><strong>{money(balance===0?0:Number.isFinite(asset.price)?balance*asset.price:null)}</strong><small>{new Intl.NumberFormat('en-US',{maximumFractionDigits:8}).format(balance)} {asset.symbol}</small></section>
+    <section className="asset-holding"><span>Balance</span><strong>{money(balance===0?0:Number.isFinite(balancePrice)?balance*balancePrice:null)}</strong><small>{new Intl.NumberFormat('en-US',{maximumFractionDigits:8}).format(balance)} {asset.symbol}</small></section>
     <div className="asset-inline-actions"><button onClick={()=>onAction('send')}><FiArrowUpRight/>Send</button><button onClick={()=>onAction('receive')}><ScanGlyph/>Receive</button><button onClick={()=>onAction('swap')}><FiRefreshCw/>Swap</button></div>
     <section className="asset-about"><h2><SparkleGlyph/>About {asset.symbol}<FiChevronRight/></h2>{description?<p className={expanded?'':'clamped'}>{description}</p>:<p className="muted">{metadata.loading?'Loading…':'Description unavailable'}</p>}{description&&<button className="asset-read-more" onClick={()=>setExpanded(value=>!value)}>{expanded?'Read less':'Read more'}</button>}</section>
     <section className="asset-details-table"><h2>Details</h2>{rows.map(([label,value])=><div key={label}><span>{label}</span><strong>{value}</strong></div>)}</section>

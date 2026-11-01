@@ -13,7 +13,7 @@ async function main(){
  try{
   const context=await browser.newContext({viewport:{width:393,height:852},isMobile:true,hasTouch:true,deviceScaleFactor:2,serviceWorkers:'block',reducedMotion:'reduce'});
   // A disposable demo balance is used only for visual comparison; no user storage is touched.
-  await context.addInitScript(()=>localStorage.setItem('trust-concept-local-v1',JSON.stringify({wallets:[{id:'main',name:'Youg client',balances:{usdc:248.715418,eth:.000636,btc:0,sol:0,bnb:0,usdt:0,pol:0}}],active:'main',currency:'USD'})));
+  await context.addInitScript(()=>localStorage.setItem('trust-concept-local-v1',JSON.stringify({wallets:[{id:'main',name:'Youg client',balances:{usdc:248.715418,eth:.000636,btc:0,sol:0,bnb:0,usdt:0,pol:0}}],active:'main',mainStaticSeeded:true,currency:'USD'})));
   await context.route('https://live-market.test/**',async route=>{
    const url=new URL(route.request().url());
    if(url.pathname==='/api/market'){

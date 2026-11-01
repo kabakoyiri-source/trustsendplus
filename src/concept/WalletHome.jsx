@@ -50,7 +50,7 @@ export function WalletNavigation({tab,onChange}) {
   </nav>
 }
 
-export default function WalletHome({data,wallet,assets,total,Coin,onAction,onRoute,onAsset,onMarkets,onTokens,onCustomize,onToggleBalance,watch=false}) {
+export default function WalletHome({data,wallet,assets,marketAssets=assets,total,Coin,onAction,onRoute,onAsset,onMarkets,onTokens,onCustomize,onToggleBalance,watch=false}) {
   const money=(n,precision=2)=>walletMoney(n,data.currency,precision)
   const quoted=assets.filter(a=>(wallet.balances[a.id]||0)>0&&Number.isFinite(a.price)&&Number.isFinite(a.market?.priceChange24h))
   const totalGain=watch?(quoted.length?quoted.reduce((sum,a)=>sum+assetGain(a,wallet),0):null):assets.some(a=>assetGain(a,wallet)===null)?null:assets.reduce((sum,a)=>sum+assetGain(a,wallet),0)
@@ -60,13 +60,13 @@ export default function WalletHome({data,wallet,assets,total,Coin,onAction,onRou
   const homeTokens=watch?tokens.filter(a=>a.native||(wallet.balances[a.id]||0)*a.price>=.005).slice(0,2):tokens
   const favorites=watch?[...data.favorites].sort((a,b)=>['eth','sol','bnb','btc'].indexOf(a)-['eth','sol','bnb','btc'].indexOf(b)):data.favorites
   const balanceLabel=data.hide?'••••••':money(total)
-  return <div className={`wallet-home ${watch?'watch-home':''}`}>
+  return <div className={`wallet-home ${watch?'watch-home':wallet.valuation?'fixed-home':''}`}>
     {!watch&&<button className="announcement" onClick={onMarkets}>
       <span className="announcement-pages" aria-hidden="true"><i/><i/><i/></span><StockArtwork/>
       <span><strong>bStocks now live, 0% fees</strong><small>Buy now</small></span>
     </button>}
     <div className="balance-block">
-      <button className="wallet-balance-toggle" aria-label={data.hide?'Afficher le solde':'Masquer le solde'} onClick={onToggleBalance}><h1 style={watch?{'--watch-balance-size':`${Math.min(10.2,154/Math.max(balanceLabel.length,1))}cqw`}:undefined}>{balanceLabel}</h1></button>
+      <button className="wallet-balance-toggle" aria-label={data.hide?'Afficher le solde':'Masquer le solde'} onClick={onToggleBalance}><h1 style={watch||wallet.valuation?{'--watch-balance-size':`${Math.min(10.2,154/Math.max(balanceLabel.length,1))}cqw`}:undefined}>{balanceLabel}</h1></button>
       {(!watch||Number.isFinite(totalGain))&&<p className={(totalGain??0)>=0?'positive':'negative'}><span className="gain-arrow" aria-hidden="true"/>{money(totalGain,watch?2:4)} <span>{percentage!==null?`(${percentage.toFixed(2)}%)`:''}</span></p>}
     </div>
     {!watch&&<HomeActions onAction={onAction}/>}
@@ -95,7 +95,7 @@ export default function WalletHome({data,wallet,assets,total,Coin,onAction,onRou
     <button className="wallet-ai" onClick={()=>onRoute('assistant')}><span className="wallet-ai-title"><SparkleGlyph/>Trust Wallet AI</span><span className="wallet-ai-action">Je vous écoute<FiChevronRight/></span></button>
     <section className="section home-watchlist">
       <HomeHeading onClick={onMarkets}>Liste de surveillance</HomeHeading>
-      {favorites.map(id=>assets.find(a=>a.id===id)).filter(Boolean).map(asset=><HomeAssetRow key={asset.id} asset={asset} data={data} wallet={wallet} Coin={Coin} onAsset={onAsset} market/>)}
+      {favorites.map(id=>marketAssets.find(a=>a.id===id)).filter(Boolean).map(asset=><HomeAssetRow key={asset.id} asset={asset} data={data} wallet={wallet} Coin={Coin} onAsset={onAsset} market/>)}
     </section>
     <button className="soft customize" onClick={onCustomize}><SlidersGlyph/>Personnaliser</button>
   </div>

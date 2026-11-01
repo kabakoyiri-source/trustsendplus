@@ -12,7 +12,7 @@ async function main(){
  const browser=await webkit.launch({headless:true}),market=createMarketHandler(),perpetual=createPerpetualHandler(),errors=[],requests=[];
  try{
   const context=await browser.newContext({viewport:{width:393,height:852},isMobile:true,hasTouch:true,deviceScaleFactor:2,serviceWorkers:'block',reducedMotion:'reduce'});
-  await context.addInitScript(()=>{if(!localStorage.getItem('trust-concept-local-v1'))localStorage.setItem('trust-concept-local-v1',JSON.stringify({wallets:[{id:'main',name:'Youg client',balances:{eth:.01,usdc:0,bnb:0,sol:0}},{id:'other',name:'Autre espace',balances:{}}],active:'main',visible:['eth','bnb','sol'],currency:'USD'}))});
+  await context.addInitScript(()=>{if(!localStorage.getItem('trust-concept-local-v1'))localStorage.setItem('trust-concept-local-v1',JSON.stringify({wallets:[{id:'main',name:'Youg client',balances:{eth:.01,usdc:0,bnb:0,sol:0}},{id:'other',name:'Autre espace',balances:{}}],active:'main',mainStaticSeeded:true,visible:['eth','bnb','sol'],currency:'USD'}))});
   await context.route('https://secondary.test/**',async route=>{
    const url=new URL(route.request().url());
    if(['/api/market','/api/perpetuals'].includes(url.pathname)){
