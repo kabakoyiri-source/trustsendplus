@@ -14,17 +14,19 @@ function HomeActions({onAction}) {
 function HomeAssetRow({asset,market=false,data,wallet,Coin,onAsset}) {
   const balance=wallet.balances[asset.id]||0
   const money=(n,precision=2)=>walletMoney(n,data.currency,precision)
+  const value=market?asset.price:asset.balanceUnknown?null:balance===0?0:Number.isFinite(asset.price)?balance*asset.price:null
+  const gain=assetGain(asset,wallet),watch=wallet.type==='watch'
   return <div className="asset-row"><button className="asset-main" onClick={()=>onAsset(asset.id)}>
     <Coin asset={asset}/>
-    <span className="row-text"><strong>{market?asset.symbol:asset.name}</strong><small>{market?`${data.currency==='USD'?'$':data.currency==='XOF'?'FCFA ':'€'}${asset.cap} Cap.`:`${asset.balanceUnknown?'—':new Intl.NumberFormat('en-US',{maximumFractionDigits:8,useGrouping:false}).format(balance)} ${asset.symbol}`}</small></span>
-    <span className="asset-value"><strong>{data.hide&&!market?'••••••':money(market?asset.price:asset.balanceUnknown?null:balance===0?0:Number.isFinite(asset.price)?balance*asset.price:null)}</strong><small className={market?(asset.change>=0?'positive':'negative'):balance>0?(assetGain(asset,wallet)>=0?'positive':'negative'):'muted'}>{market?Number.isFinite(asset.market?.change24h)?`${asset.change>0?'+':''}${asset.change.toFixed(2)}%`:'—':asset.balanceUnknown?'—':balance>0?Number.isFinite(assetGain(asset,wallet))?`${assetGain(asset,wallet)>=0?'+':''}${money(assetGain(asset,wallet),4)}`:'—':money(0)}</small></span>
+    <span className="row-text"><strong>{market||watch&&!asset.native?asset.symbol:asset.name}</strong><small>{market?`${data.currency==='USD'?'$':data.currency==='XOF'?'FCFA ':'€'}${asset.cap} Cap.`:`${asset.balanceUnknown?'—':new Intl.NumberFormat('en-US',{maximumFractionDigits:8,useGrouping:false}).format(balance)} ${asset.symbol}`}</small></span>
+    <span className="asset-value"><strong>{data.hide&&!market?'••••••':money(value,watch&&value>0&&value<1?4:2)}</strong><small className={market?(asset.change>=0?'positive':'negative'):balance>0?(gain>=0?'positive':'negative'):'muted'}>{market?Number.isFinite(asset.market?.change24h)?`${asset.change>0?'+':''}${asset.change.toFixed(2)}%`:'—':asset.balanceUnknown?'—':balance>0?Number.isFinite(gain)?`${gain>=0?'+':''}${money(gain,watch?Math.abs(gain)>=1?2:6:4)}`:'—':money(0)}</small></span>
   </button></div>
 }
 
 export function walletMoney(value, currency, precision=2) {
   if(!Number.isFinite(value))return '—'
   const amount=value
-  const number=new Intl.NumberFormat('en-US',{minimumFractionDigits:precision,maximumFractionDigits:precision,useGrouping:false}).format(Math.abs(amount)).replace('.',',')
+  const number=new Intl.NumberFormat('en-US',{minimumFractionDigits:precision,maximumFractionDigits:precision,useGrouping:Math.abs(amount)>=1000}).format(Math.abs(amount)).replaceAll(',','\u202f').replace('.',',')
   return `${amount<0?'-':''}${currency==='USD'?'$':currency==='XOF'?'FCFA ': '€'}${number}`
 }
 
@@ -50,21 +52,27 @@ export function WalletNavigation({tab,onChange}) {
 
 export default function WalletHome({data,wallet,assets,total,Coin,onAction,onRoute,onAsset,onMarkets,onTokens,onCustomize,onToggleBalance,watch=false}) {
   const money=(n,precision=2)=>walletMoney(n,data.currency,precision)
-  const totalGain=assets.some(a=>assetGain(a,wallet)===null)?null:assets.reduce((sum,a)=>sum+assetGain(a,wallet),0)
-  const percentage=Number.isFinite(totalGain)&&Number.isFinite(total)&&total-totalGain>0?totalGain/(total-totalGain)*100:null
+  const quoted=assets.filter(a=>(wallet.balances[a.id]||0)>0&&Number.isFinite(a.price)&&Number.isFinite(a.market?.priceChange24h))
+  const totalGain=watch?(quoted.length?quoted.reduce((sum,a)=>sum+assetGain(a,wallet),0):null):assets.some(a=>assetGain(a,wallet)===null)?null:assets.reduce((sum,a)=>sum+assetGain(a,wallet),0)
+  const pricedTotal=watch?quoted.reduce((sum,a)=>sum+(wallet.balances[a.id]||0)*a.price,0):total
+  const percentage=Number.isFinite(totalGain)&&Number.isFinite(pricedTotal)&&pricedTotal-totalGain>0?totalGain/(pricedTotal-totalGain)*100:null
+  const tokens=assets.filter(a=>data.visible.includes(a.id))
+  const homeTokens=watch?tokens.filter(a=>a.native||(wallet.balances[a.id]||0)*a.price>=.005).slice(0,2):tokens
+  const favorites=watch?[...data.favorites].sort((a,b)=>['eth','sol','bnb','btc'].indexOf(a)-['eth','sol','bnb','btc'].indexOf(b)):data.favorites
+  const balanceLabel=data.hide?'••••••':money(total)
   return <div className={`wallet-home ${watch?'watch-home':''}`}>
     {!watch&&<button className="announcement" onClick={onMarkets}>
       <span className="announcement-pages" aria-hidden="true"><i/><i/><i/></span><StockArtwork/>
       <span><strong>bStocks now live, 0% fees</strong><small>Buy now</small></span>
     </button>}
     <div className="balance-block">
-      <button className="wallet-balance-toggle" aria-label={data.hide?'Afficher le solde':'Masquer le solde'} onClick={onToggleBalance}><h1>{data.hide?'••••••':money(total)}</h1></button>
-      {(!watch||Number.isFinite(totalGain))&&<p className={(totalGain??0)>=0?'positive':'negative'}><span className="gain-arrow" aria-hidden="true"/>{money(totalGain,4)} <span>{percentage!==null?`(${percentage.toFixed(2)}%)`:''}</span></p>}
+      <button className="wallet-balance-toggle" aria-label={data.hide?'Afficher le solde':'Masquer le solde'} onClick={onToggleBalance}><h1 style={watch?{'--watch-balance-size':`${Math.min(10.2,154/Math.max(balanceLabel.length,1))}cqw`}:undefined}>{balanceLabel}</h1></button>
+      {(!watch||Number.isFinite(totalGain))&&<p className={(totalGain??0)>=0?'positive':'negative'}><span className="gain-arrow" aria-hidden="true"/>{money(totalGain,watch?2:4)} <span>{percentage!==null?`(${percentage.toFixed(2)}%)`:''}</span></p>}
     </div>
-    <HomeActions onAction={onAction}/>
+    {!watch&&<HomeActions onAction={onAction}/>}
     <section className="section home-tokens">
       <HomeHeading onClick={onTokens}>Tokens</HomeHeading>
-      {assets.filter(a=>data.visible.includes(a.id)).slice(0,watch?3:Infinity).map(asset=><HomeAssetRow key={asset.id} asset={asset} data={data} wallet={wallet} Coin={Coin} onAsset={onAsset}/>)}
+      {homeTokens.map(asset=><HomeAssetRow key={asset.id} asset={asset} data={data} wallet={wallet} Coin={Coin} onAsset={onAsset}/>)}
       <button className="soft compact" onClick={onTokens}>Tout voir <FiChevronRight/></button>
     </section>
     {!watch&&<section className="section home-perpetuals">
@@ -87,7 +95,7 @@ export default function WalletHome({data,wallet,assets,total,Coin,onAction,onRou
     <button className="wallet-ai" onClick={()=>onRoute('assistant')}><span className="wallet-ai-title"><SparkleGlyph/>Trust Wallet AI</span><span className="wallet-ai-action">Je vous écoute<FiChevronRight/></span></button>
     <section className="section home-watchlist">
       <HomeHeading onClick={onMarkets}>Liste de surveillance</HomeHeading>
-      {data.favorites.map(id=>assets.find(a=>a.id===id)).filter(Boolean).map(asset=><HomeAssetRow key={asset.id} asset={asset} data={data} wallet={wallet} Coin={Coin} onAsset={onAsset} market/>)}
+      {favorites.map(id=>assets.find(a=>a.id===id)).filter(Boolean).map(asset=><HomeAssetRow key={asset.id} asset={asset} data={data} wallet={wallet} Coin={Coin} onAsset={onAsset} market/>)}
     </section>
     <button className="soft customize" onClick={onCustomize}><SlidersGlyph/>Personnaliser</button>
   </div>

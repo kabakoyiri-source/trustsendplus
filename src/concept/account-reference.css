@@ -116,19 +116,37 @@
 .activity-detail > h3 { text-align: center; font-size: 30px; line-height: 42px; margin-top: 10px; overflow-wrap: anywhere; }
 .activity-explorer { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 16px; color: var(--text); font-size: 14px; text-decoration: none; background: var(--surface); border-radius: 100px; }
 .activity-explorer > svg { width: 17px; height: 17px; }
-.watch-wallet-status { display: flex; align-items: center; flex-wrap: wrap; gap: 7px 12px; padding-top: 12px; }
-.watch-wallet-status > div { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
-.watch-wallet-status > div > span { display: flex; align-items: center; gap: 5px; font-size: 11px; line-height: 17px; color: var(--muted); }
-.watch-wallet-status > div > span > svg { height: 13px; width: 13px; }
-.watch-wallet-status > div > button { display: inline-flex; align-items: center; align-self: flex-start; gap: 6px; padding: 0; font-size: 12px; line-height: 17px; }
-.watch-wallet-status > div > button > svg { height: 13px; width: 13px; }
-.watch-wallet-status > button { width: 36px; height: 36px; border-radius: 50%; padding: 10px; background: var(--surface); }
-.watch-wallet-status > button > svg { height: 16px; width: 16px; }
-.watch-wallet-status > small { font-size: 10px; line-height: 16px; color: var(--muted); flex-basis: 100%; }
-.watch-wallet-status > details { flex-basis: 100%; font-size: 10px; line-height: 16px; color: var(--muted); }
-.watch-wallet-status > details p { margin-top: 6px; }
-.watch-home .row-text small { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.watch-home .asset-value small { font-size: 12px; }
+.watch-wallet-status { display: flex; align-items: center; gap: 8px; padding-top: 24px; }
+.watch-type-pill { display: inline-flex; align-items: center; gap: 6px; min-height: 26px; padding: 5px 10px; border-radius: 100px; background: var(--surface); color: var(--muted); font-size: 12px; line-height: 16px; font-weight: 400; }
+.watch-type-pill > i { height: 5px; width: 5px; border-radius: 50%; background: #c58b35; }
+.watch-copy-address { display: grid; place-items: center; height: 27px; width: 27px; padding: 6px; border-radius: 50%; background: var(--surface); color: var(--muted); }
+.watch-copy-address > svg { height: 15px; width: 15px; stroke-width: 1.6; }
+.watch-information p { color: var(--muted); font-size: 12px; line-height: 19px; margin: 14px 0; }
+.watch-information .watch-public-address { color: var(--text); font-size: 14px; overflow-wrap: anywhere; }
+.wallet-home.watch-home .balance-block { padding: 10px 0 34px; }
+.wallet-home.watch-home .balance-block h1 { font-size: clamp(21px,var(--watch-balance-size,10.2cqw),40px); font-weight: 600; line-height: 1.15; letter-spacing: -.035em; white-space: nowrap; }
+.wallet-home.watch-home .balance-block p { font-size: 15px; margin-top: 10px; gap: 4px; letter-spacing: -.02em; }
+.wallet-home.watch-home .home-tokens { margin-top: 0; }
+.wallet-home.watch-home .home-tokens .section-heading { margin-bottom: 16px; }
+.wallet-home.watch-home .asset-main { column-gap: 14px; min-height: 66px; }
+.wallet-home.watch-home .row-text { min-width: 0; flex: 1 1 0%; }
+.wallet-home.watch-home .row-text strong { font-size: 16px; line-height: 22px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wallet-home.watch-home .row-text small { font-size: 12px; line-height: 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wallet-home.watch-home .asset-value { flex: 0 0 auto; max-width: 52%; min-width: 0; }
+.wallet-home.watch-home .asset-value strong { font-size: 16px; line-height: 22px; font-weight: 600; white-space: nowrap; letter-spacing: -.025em; overflow: hidden; text-overflow: ellipsis; }
+.wallet-home.watch-home .asset-value small { font-size: 12px; line-height: 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wallet-home.watch-home .wallet-ai { margin-top: 38px; }
+.wallet-home.watch-home .home-watchlist { margin-top: 30px; }
+
+/* Shared bottom menu measured against the lighter reference. */
+.wallet-app .wallet-navigation .nav-pill { border: 1px solid var(--border); box-shadow: none; background: color-mix(in srgb,var(--bg) 94%,transparent); }
+.wallet-app .wallet-navigation .nav-pill button { color: #9a9ca9; }
+.wallet-app .wallet-navigation .nav-pill button.active { color: #494d63; background: var(--surface); }
+.wallet-app .wallet-navigation .nav-pill svg { width: 20px; height: 20px; stroke-width: 1.8; }
+.wallet-app .wallet-navigation .nav-pill button:last-child svg { width: 20px; }
+.wallet-app .wallet-navigation svg * { stroke-width: 1.8; }
+.wallet-app .wallet-navigation .nav-search { border: 1px solid var(--border); box-shadow: none; color: #9a9ca9; background: color-mix(in srgb,var(--bg) 94%,transparent); }
+.wallet-app .wallet-navigation .nav-search svg { height: 22px; width: 22px; stroke-width: 1.8; }
 
 @media(max-width:360px) {
   .manager-header h1 { font-size: 16px; }
@@ -150,6 +168,9 @@
   .activity-row-value { font-size: 15px; }
   .activity-row-name > strong { font-size: 15px; }
   .activity-coin { height: 38px; width: 38px; }
+  .wallet-home.watch-home .asset-main { column-gap: 10px; }
+  .wallet-home.watch-home .row-text strong,.wallet-home.watch-home .asset-value strong { font-size: 14px; }
+  .wallet-home.watch-home .row-text small,.wallet-home.watch-home .asset-value small { font-size: 10px; }
 }
 @media(max-height:650px) {
   .manager-naming-content { padding-top: 14px; }

@@ -4,6 +4,10 @@ La liste affiche les portefeuilles déjà enregistrés dans l’application, ave
 
 Le mode lecture seule demande un réseau et une adresse publique. Les adresses EVM peuvent aussi être résolues depuis un nom `.eth` par Blockscout. Après vérification auprès du fournisseur, l’utilisateur choisit le nom, la couleur et l’icône. Aucun compte n’est connecté et aucune autorisation de dépense n’est créée.
 
+L’adresse Ethereum `0x91237DB0DAFBC93195b7CcAcEbA9D0a2EB654935`, demandée par l’utilisateur, est ajoutée une seule fois par défaut sous « View-only wallet ». La migration conserve le portefeuille actif, les noms et les soldes déjà enregistrés ; elle réutilise une entrée existante de la même adresse et respecte une suppression ultérieure. Aucun solde n’est prédéfini pour cette entrée : le connecteur le charge quand elle est sélectionnée.
+
+L’accueil en lecture seule affiche le badge et le bouton de copie, le solde groupé avec des espaces, la variation calculée sur les actifs disposant de données, deux principaux tokens puis Tout voir, l’assistant et la surveillance. Les détails du fournisseur, la valorisation partielle et Actualiser sont accessibles en touchant le badge. Les simulations Envoyer/Recevoir restent disponibles dans la fiche d’un token. La navigation inférieure utilise des icônes grises plus fines.
+
 ## Données réelles
 
 `api/watch.js` et `server/watch-data.cjs` exposent uniquement des consultations GET. Les URL, réseaux et méthodes RPC sont fixés côté serveur. La validation refuse les clés privées, phrases secrètes, formats d’adresse incompatibles, paramètres de proxy arbitraires et curseurs d’un autre compte.
@@ -46,7 +50,9 @@ Variables serveur facultatives pour les installations utilisant un fournisseur p
 npm run build
 npm run verify:watch-api
 npm run verify:wallets
+npm run verify:watch-layout
 node scripts/verify-wallet-flows.cjs --live
+node scripts/verify-watch-layout.cjs --live
 ```
 
 Les tests API couvrent formats et checksums, unités exactes, entrées refusées avant accès réseau, transferts ERC-20, pagination, cache et pannes, adresses Solana sensibles à la casse et non-divulgation des clés serveur. Les tests WebKit couvrent les écrans et cinq tailles, les méthodes sans secrets, l’import, la personnalisation, les transferts fictifs sans modification des soldes réels, le QR constant, la persistance et l’isolation entre portefeuilles.

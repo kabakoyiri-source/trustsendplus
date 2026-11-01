@@ -25,6 +25,7 @@
     "verify:perpetuals": "node --test scripts/verify-perpetual-api.cjs",
     "verify:watch-api": "node --test scripts/verify-watch-api.cjs",
     "verify:wallets": "node scripts/verify-wallet-flows.cjs",
+    "verify:watch-layout": "node scripts/verify-watch-layout.cjs",
     "build:qa": "node scripts/build-qa.cjs",
     "preview": "vite preview",
     "verify:mobile": "node scripts/verify-mobile.cjs",

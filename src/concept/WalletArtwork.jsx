@@ -29,10 +29,10 @@ export function SparkleGlyph() {
 }
 
 export function TokenArtwork({id}) {
+  // Keep the supplied logo artwork, cropping only its empty outer margin.
+  if(id==='btc'||id==='bnb') return <svg viewBox={id==='btc'?'15 11 115 115':'10 11 113 113'} style={{borderRadius:'50%'}} aria-hidden="true"><image href={`/tokens/${id}.png`} width={id==='btc'?145:130} height={id==='btc'?153:131}/></svg>
   if(id==='eth') return <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="20" fill="#627eec"/><path d="m20 4-9 16 9 5 9-5Z" fill="#c7d7ff"/><path d="m20 4 9 16-9 5Z" fill="#91acf9"/><path d="m11 22 9 14 9-14-9 5Z" fill="#fff"/><path d="m20 27 9-5-9 14Z" fill="#b4c8ff"/><path d="m11 20 9-4.2 9 4.2-9 5Z" fill="#fff" opacity=".45"/></svg>
   if(id==='usdc') return <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="20" fill="#2775ca"/><path d="M13 7a14 14 0 0 0 0 26M27 7a14 14 0 0 1 0 26" fill="none" stroke="#fff" strokeWidth="2.5"/><path d="M25 14c-1-4-11-4-11 1 0 5 12 3 12 9 0 6-12 6-13 0m7-15v23" fill="none" stroke="#fff" strokeWidth="2.7" strokeLinecap="round"/></svg>
-  if(id==='btc') return <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="20" fill="#f7931a"/><g transform="rotate(12 20 20)" fill="#fff"><text x="20" y="30" fontSize="32" fontFamily="Arial,sans-serif" fontWeight="700" textAnchor="middle">₿</text></g></svg>
-  if(id==='bnb') return <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="20" fill="#050505"/><g fill="none" stroke="#f4c400" strokeWidth="2.1" strokeLinejoin="miter"><path d="m20 6 9 5-9 5-9-5Zm-9 10 9 5 9-5M11 22l9 5 9-5M20 16v18M7 15v13l8 5M33 15v13l-8 5M12 17v9m16-9v9"/></g></svg>
   if(id==='sol') return <svg viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="solana-bars" x1="0" y1="0" x2="1" y2="1"><stop stopColor="#55ffc5"/><stop offset=".55" stopColor="#38b8be"/><stop offset="1" stopColor="#9945ff"/></linearGradient></defs><circle cx="20" cy="20" r="20" fill="#080414"/><path d="m10 9-4 5h24l4-5ZM6 18l4 5h24l-4-5Zm4 9-4 5h24l4-5Z" fill="url(#solana-bars)"/></svg>
   if(id==='hype') return <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="20" fill="#072723"/><path d="M7 20c0-11 9-12 13-4 4-8 13-7 13 4s-9 12-13 4c-4 8-13 7-13-4" fill="#83f5d0"/></svg>
   if(id==='usdt') return <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="20" fill="#26a17b"/><path d="M11 10h18v5h-7v16h-4V15h-7Z" fill="#fff"/><ellipse cx="20" cy="19" rx="13" ry="3" fill="none" stroke="#fff" strokeWidth="1.4"/></svg>

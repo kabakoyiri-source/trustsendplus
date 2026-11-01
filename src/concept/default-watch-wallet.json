@@ -1,0 +1,13 @@
+{
+  "id": "watch-ethereum-default",
+  "name": "View-only wallet",
+  "type": "watch",
+  "color": "#9a92a7",
+  "icon": "wallet",
+  "balances": {},
+  "watch": {
+    "network": "ethereum",
+    "address": "0x91237DB0DAFBC93195b7CcAcEbA9D0a2EB654935",
+    "input": "0x91237DB0DAFBC93195b7CcAcEbA9D0a2EB654935"
+  }
+}

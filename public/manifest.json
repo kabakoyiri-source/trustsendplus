@@ -1,7 +1,7 @@
 {
   "id": "/",
-  "name": "Trust Concept · Démo",
-  "short_name": "Trust Concept",
+  "name": "Trust Wallet",
+  "short_name": "Trust Wallet",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
