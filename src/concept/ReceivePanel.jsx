@@ -19,13 +19,13 @@ export default function ReceivePanel({asset,assets,walletId,addresses,onAddress,
         <div className="receive-qr-art"><img src="/receive-qr.svg" alt="QR de démonstration, identique pour tous les actifs" data-testid="fixed-receive-qr"/><span className="receive-qr-logo"><span style={{background:asset.color}}><AssetIcon asset={asset}/></span></span></div>
         <button className="receive-address" aria-label="Modifier l’adresse affichée" onClick={()=>{setDraft(address);setEditing(true)}}>{address}</button>
       </div>
-      <div className="receive-notice"><FiAlertCircle/><p>{readOnlyAddress?'Adresse surveillée en lecture seule. Le QR reste un QR de démonstration et n’encode pas cette adresse.':`Demo only. Do not send real assets to this address. ${asset.network} network preview.`}</p></div>
+      <div className="receive-notice"><FiAlertCircle/><p>Envoyez uniquement des actifs {asset.network} à cette adresse. Tout autre actif sera perdu définitivement.</p></div>
       <div className="receive-actions"><button onClick={copy}><span><FiCopy/></span>Copy</button><button onClick={share}><span><FiUpload/></span>Share</button></div>
       <button className="receive-coinbase" onClick={onDeposit}><span aria-hidden="true">C</span>Deposit from Coinbase</button>
     </div>
     {(picker||editing)&&<div className="receive-options-backdrop" onClick={()=>{setPicker(false);setEditing(false)}}><div className="receive-options" role="dialog" aria-modal="true" aria-label={picker?'Choisir la crypto':'Modifier l’adresse de démonstration'} onClick={e=>e.stopPropagation()}>
       <button className="receive-options-close" aria-label="Fermer" onClick={()=>{setPicker(false);setEditing(false)}}><FiX/></button>
-      {picker?<><h2>Receive</h2>{assets.map(item=><button className="receive-asset-option" key={item.id} aria-label={`Choisir ${item.symbol}`} onClick={()=>{onAsset(item.id);setPicker(false)}}><span><AssetIcon asset={item}/></span><strong>{item.name}<small>{item.network}</small></strong>{item.id===asset.id?<FiCheck/>:<FiChevronRight/>}</button>)}</>:<><h2>Adresse affichée</h2><p className="muted">Le QR de démonstration reste identique.</p><label className="field-label">Adresse<input autoFocus maxLength={128} value={draft} onChange={e=>setDraft(e.target.value)}/></label><button className="primary" disabled={!draft.trim()} onClick={()=>{onAddress(key,draft.trim());setEditing(false)}}>Enregistrer</button></>}
+      {picker?<><h2>Receive</h2>{assets.map(item=><button className="receive-asset-option" key={item.id} aria-label={`Choisir ${item.symbol}`} onClick={()=>{onAsset(item.id);setPicker(false)}}><span><AssetIcon asset={item}/></span><strong>{item.name}<small>{item.network}</small></strong>{item.id===asset.id?<FiCheck/>:<FiChevronRight/>}</button>)}</>:<><h2>Adresse affichée</h2><label className="field-label">Adresse<input autoFocus maxLength={128} value={draft} onChange={e=>setDraft(e.target.value)}/></label><button className="primary" disabled={!draft.trim()} onClick={()=>{onAddress(key,draft.trim());setEditing(false)}}>Enregistrer</button></>}
     </div></div>}
   </section>
 }
