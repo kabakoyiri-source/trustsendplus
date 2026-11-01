@@ -2,7 +2,7 @@
 
 ## Références et direction visuelle
 
-La page officielle https://trustwallet.com/download consultée le 30 octobre 2026 affiche iOS 26.43.14. La provenance de version des captures utilisateur n'est pas vérifiée. Elles constituent la référence visuelle principale : fond clair, grands montants, cartes gris perle, quatre actions rapides, accent bleu violet, navigation flottante. Les écrans complémentaires sont des propositions originales, sans prétendre reproduire une version officielle.
+La provenance de version des captures utilisateur n'est pas vérifiée. Elles constituent la référence visuelle principale : fond clair, grands montants, cartes gris perle, quatre actions rapides, accent bleu violet, navigation flottante. Les écrans d’accueil, de réception, de fiche actif, d’envoi, de marchés, de swap et de recherche reprennent les références fournies.
 
 L’accueil après le PIN suit les trois captures de référence : carte de portefeuille jaune « Youg client », historique et scan, annonce bStocks, solde en euros, quatre actions, Tokens, Contrats perpétuels, Prédictions, Trust Wallet AI, liste de surveillance et personnalisation. L’en-tête remplace le nom par le solde pendant le défilement. La navigation flottante comporte trois icônes (Accueil, Marchés, Earn) et une recherche séparée. Explorer est accessible depuis Earn ; les réglages sont accessibles depuis le sélecteur de portefeuille.
 
@@ -14,10 +14,11 @@ La mise en page utilise des marges de 16 px, des icônes de tokens vectorielles,
 | --- | --- |
 | Entrée | Accès direct au code PIN à six chiffres, écran épuré suivant la référence, clavier tactile et physique, erreur PIN, verrouillage |
 | Portefeuille | Accueil conforme à l’ordre des captures, solde masquable, en-tête au défilement, tokens, contrats perpétuels, prédictions, assistant, surveillance et personnalisation |
-| Marchés | Prix et variations CoinGecko, fiches, détails, liens, sept périodes réelles de graphique et inspection au pointeur |
-| Envoi | Destinataire fictif, carnet de trois contacts, sélection d'actif, montant, maximum, solde insuffisant, vérification, confirmation |
+| Marchés | Crypto/Stocks, Bluechips, tendances, favoris, émetteurs bStocks/Robinhood/Ondo, réseaux, tri, 31 actifs, prix et mini-courbes CoinGecko, fiches détaillées et sept périodes réelles de graphique |
+| Envoi | Volet destinataire et volet montant selon les captures, carnet de trois contacts, collage, sélection d’actif, clavier numérique, conversion fiat, maximum, solde insuffisant, vérification et confirmation locale |
 | Réception | Volet conforme à la référence, QR de démonstration fixe, crypto et adresse modifiables, Copy/Share et dépôt Coinbase simulé |
-| Swap | Choix source et destination, inversion, taux issu des cours actuels, tolérance illustrative, revue et confirmation locale |
+| Swap | Deux cartes source/destination, inversion, clavier numérique, pourcentage du solde, taux actuel, tolérance et confirmation par glissement avant la revue locale |
+| Recherche | Vue plein écran, consultations récentes, liste Tendance, Tokens/DApps, recherche et collage dans la barre flottante |
 | Achat | Crédit fictif sans paiement, revue, confirmation |
 | Activité | Historique local par portefeuille, filtres, détails et identifiants locaux |
 | Earn | Allocations de session, actifs de staking, fiche validateur fictif, parcours de simulation |
@@ -36,7 +37,7 @@ La mise en page utilise des marges de 16 px, des icônes de tokens vectorielles,
 - Les portefeuilles, soldes, préférences et opérations persistent dans localStorage sous `trust-concept-local-v1`. L'allocation Earn n'est conservée que pendant la session.
 - Ancien projet bancaire conservé dans les anciens modules de `src` pour référence. Il n'est plus importé par `src/main.jsx`. Ses tests historiques ne valident pas le nouveau concept.
 - iPhone Safari et installation physique doivent être contrôlés sur appareil réel après publication. Les tests automatisés utilisent WebKit et des dimensions mobiles, ce qui ne remplace pas un iPhone.
-- Aucune affiliation à Trust Wallet. Les logos de tokens et les petites illustrations sont des dessins vectoriels locaux.
+- Aucune affiliation à Trust Wallet. Les actifs principaux et petites illustrations utilisent des dessins vectoriels locaux ; les autres logos de tokens proviennent des images publiques CoinGecko et sont conservés dans le projet.
 
 ## Lancer et valider
 
@@ -45,9 +46,11 @@ npm install
 npm run dev
 npm run build
 npm run verify:concept
+npm run verify:market
+npm run verify:reference
 ```
 
-Les captures de vérification sont générées dans `qa/concept`.
+Les captures de vérification sont générées dans `qa/concept` et `qa/reference-flows`. `node scripts/verify-reference-flows.cjs --live` vérifie les six nouvelles vues avec les cotations réelles.
 
 Les icônes sont générées par `node scripts/generate-concept-icons.cjs`. La révision `v3` utilise des URL distinctes pour le SVG compact, l’icône iPhone et les icônes Android. L’icône Android adaptative a ses propres marges. Toute modification ultérieure des icônes doit aussi changer leur URL dans le manifeste et les liens HTML : remplacer seulement les pixels d’une image à la même adresse ne suffit pas pour signaler une mise à jour d’icône aux versions récentes de Chrome. Le fallback `apple-touch-icon.png` est conservé, et les icônes référencées sont incluses dans le cache hors ligne.
 

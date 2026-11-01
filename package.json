@@ -20,6 +20,7 @@
     "build": "vite build",
     "verify:concept": "node scripts/verify-concept.cjs",
     "verify:market": "node --test scripts/verify-market-api.cjs",
+    "verify:reference": "node scripts/verify-reference-flows.cjs",
     "build:qa": "node scripts/build-qa.cjs",
     "preview": "vite preview",
     "verify:mobile": "node scripts/verify-mobile.cjs",

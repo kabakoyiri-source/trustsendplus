@@ -49,7 +49,7 @@ export function useMarketResource(params,enabled=true) {
 }
 
 export function useMarketQuotes(base,currency,enabled) {
-  const state=useMarketResource({type:'markets',currency:currency.toLowerCase()},enabled)
+  const state=useMarketResource({type:'markets',currency:currency.toLowerCase(),catalog:'2'},enabled)
   const assets=useMemo(()=>base.map(asset=>{
     const quote=state.data?.quotes?.[asset.id]
     return {...asset,price:quote?.price??null,change:quote?.change24h??0,cap:quote?.marketCap?new Intl.NumberFormat('en-US',{notation:'compact',maximumFractionDigits:2}).format(quote.marketCap):'—',market:quote||null}

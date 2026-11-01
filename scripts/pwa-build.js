@@ -12,9 +12,11 @@ export function pwaBuild() {
     configResolved(config) { publicDir = config.publicDir; projectDir = config.root },
     generateBundle(_options, bundle) {
       const manifest = JSON.parse(fs.readFileSync(path.join(publicDir, 'manifest.json'), 'utf8'))
+      const catalog = JSON.parse(fs.readFileSync(path.join(projectDir, 'src/concept/asset-catalog.json'), 'utf8'))
       const staticPaths = [...new Set([
         '/manifest.json', '/concept-icon.svg', '/concept-icon-v3.svg', '/concept-icon-180-v3.png', '/receive-qr.svg',
         ...['Regular','Medium','SemiBold','ExtraBold'].map(weight => `/fonts/Inter-${weight}.woff2`),
+        ...catalog.map(asset => `/tokens/${asset.id}.png`),
         ...manifest.icons.map(icon => icon.src),
       ])]
       const template = fs.readFileSync(path.join(publicDir, 'service-worker.js'), 'utf8')

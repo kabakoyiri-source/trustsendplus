@@ -1,4 +1,5 @@
-const COINS = Object.freeze({btc:'bitcoin',eth:'ethereum',usdc:'usd-coin',usdt:'tether',sol:'solana',bnb:'binancecoin',pol:'polygon-ecosystem-token'});
+const CATALOG=require('../src/concept/asset-catalog.json');
+const COINS=Object.freeze(Object.fromEntries(CATALOG.map(asset=>[asset.id,asset.providerId])));
 const finite = value => typeof value === 'number' && Number.isFinite(value);
 
 function createMarketHandler({fetchImpl=globalThis.fetch,now=Date.now,apiKey=()=>process.env.COINGECKO_DEMO_API_KEY}={}) {
@@ -35,7 +36,7 @@ function createMarketHandler({fetchImpl=globalThis.fetch,now=Date.now,apiKey=()=
     const upstreamCurrency=currency==='xof'?'eur':currency, rate=currency==='xof'?655.957:1;
     let pathname,params,ttl;
     if(type==='markets') {
-      pathname='/coins/markets';params={vs_currency:upstreamCurrency,ids:Object.values(COINS).join(','),price_change_percentage:'24h'};ttl=60000;
+      pathname='/coins/markets';params={vs_currency:upstreamCurrency,ids:Object.values(COINS).join(','),price_change_percentage:'24h',sparkline:'true'};ttl=60000;
     } else if(type==='chart') {
       pathname=`/coins/${COINS[asset]}/market_chart`;params={vs_currency:upstreamCurrency,days:String(days)};ttl=days===1?60000:300000;
     } else {
@@ -50,7 +51,7 @@ function createMarketHandler({fetchImpl=globalThis.fetch,now=Date.now,apiKey=()=
         body={...meta,quotes:Object.fromEntries(Object.entries(COINS).map(([id,providerId])=>{
           const row=result.data.find(item=>item.id===providerId)||{};
           const amount=key=>finite(row[key])?row[key]*rate:null;
-          return [id,{price:amount('current_price'),change24h:finite(row.price_change_percentage_24h)?row.price_change_percentage_24h:null,priceChange24h:amount('price_change_24h'),marketCap:amount('market_cap'),volume24h:amount('total_volume'),fdv:amount('fully_diluted_valuation'),circulatingSupply:row.circulating_supply??null,totalSupply:row.total_supply??null,maxSupply:row.max_supply??null,updatedAt:row.last_updated||null}];
+          return [id,{price:amount('current_price'),change24h:finite(row.price_change_percentage_24h)?row.price_change_percentage_24h:null,priceChange24h:amount('price_change_24h'),marketCap:amount('market_cap'),volume24h:amount('total_volume'),fdv:amount('fully_diluted_valuation'),circulatingSupply:row.circulating_supply??null,totalSupply:row.total_supply??null,maxSupply:row.max_supply??null,sparkline:(row.sparkline_in_7d?.price||[]).filter(value=>finite(value)&&value>0).map(value=>value*rate),updatedAt:row.last_updated||null}];
         }))};
       } else if(type==='chart') {
         const prices=result.data.prices;

@@ -2,7 +2,7 @@ const {test}=require('node:test');
 const assert=require('node:assert/strict');
 const {createMarketHandler}=require('../server/market-data.cjs');
 
-const quote={id:'ethereum',current_price:2000,price_change_percentage_24h:5,price_change_24h:100,market_cap:240e9,total_volume:4e9,fully_diluted_valuation:250e9,circulating_supply:120e6,total_supply:125e6,last_updated:'2026-11-01T12:00:00Z'};
+const quote={id:'ethereum',current_price:2000,price_change_percentage_24h:5,price_change_24h:100,market_cap:240e9,total_volume:4e9,fully_diluted_valuation:250e9,circulating_supply:120e6,total_supply:125e6,sparkline_in_7d:{price:[1800,null,1900,-1,2000]},last_updated:'2026-11-01T12:00:00Z'};
 async function call(handler,url,method='GET'){
  const headers={};let body;
  const res={statusCode:0,setHeader:(k,v)=>{headers[k]=v},end:value=>{body=JSON.parse(value)}};
@@ -14,11 +14,13 @@ test('public proxy validates all query inputs before requesting a provider',asyn
  assert.equal((await call(handler,'/api/market','POST')).status,405);assert.equal(calls,0);
 });
 test('quotes are real provider fields, cached and converted consistently for XOF',async()=>{
- let calls=0;const handler=createMarketHandler({fetchImpl:async()=>{calls++;return {ok:true,json:async()=>[quote]}},apiKey:()=>undefined});
+ let calls=0;const handler=createMarketHandler({fetchImpl:async url=>{calls++;assert.equal(new URL(url).searchParams.get('sparkline'),'true');return {ok:true,json:async()=>[quote]}},apiKey:()=>undefined});
  const first=await call(handler,'/api/market?type=markets&currency=eur');
  assert.equal(first.status,200);assert.equal(first.body.quotes.eth.price,2000);assert.equal(first.body.quotes.eth.change24h,5);assert.equal(first.body.quotes.eth.marketCap,240e9);
+ assert.deepEqual(first.body.quotes.eth.sparkline,[1800,1900,2000]);assert.equal(Object.keys(first.body.quotes).length,31);
  await call(handler,'/api/market?type=markets&currency=eur');assert.equal(calls,1);
  const xof=await call(handler,'/api/market?type=markets&currency=xof');assert.equal(xof.body.quotes.eth.price,2000*655.957);assert.equal(calls,1);
+ assert.deepEqual(xof.body.quotes.eth.sparkline,[1800,1900,2000].map(value=>value*655.957));
  assert.equal(first.body.quotes.btc.price,null,'Missing provider prices must never become fabricated prices');
 });
 test('concurrent browser requests share one upstream request and keys stay server-side',async()=>{

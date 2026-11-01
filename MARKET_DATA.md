@@ -6,13 +6,17 @@ Les cours et graphiques sont fournis par CoinGecko. Les soldes, réceptions, ach
 
 La fonction `api/market.js` est déployée automatiquement par Vercel. Le serveur Vite expose la même route en développement avec `npm run dev`.
 
-- `/api/market?type=markets&currency=eur` : prix, variation et volume sur 24 heures, capitalisation, FDV et offre des sept actifs.
+- `/api/market?type=markets&currency=eur` : prix, variation et volume sur 24 heures, capitalisation, FDV, offre et historique miniature sur sept jours des 31 actifs du catalogue.
 - `/api/market?type=chart&asset=eth&currency=usd&days=365` : historique réel. Les périodes de 15 minutes à un jour utilisent les points de la dernière journée ; une semaine, un mois et un an utilisent leurs historiques respectifs.
 - `/api/market?type=detail&asset=eth&currency=usd` : description et liens publics.
 
 Les actifs, périodes, devises et fournisseurs autorisés sont limités côté serveur. Aucune URL de proxy arbitraire n’est acceptée. Le cache regroupe les requêtes et conserve les cours une minute, les historiques longs cinq minutes et les fiches trente minutes. Le navigateur rafraîchit les cours environ chaque minute lorsque l’application est visible, ainsi qu’au retour en ligne.
 
 Les prix sont demandés dans la devise choisie. Le FCFA utilise la cotation EUR multipliée par la parité 655,957 ; aucun ancien taux USD fixe n’est appliqué.
+
+Le catalogue partagé `src/concept/asset-catalog.json` associe chaque actif à son identifiant CoinGecko vérifié. Il comprend les cryptos principales, les tokens de la liste Tendance et les actions tokenisées bStocks, Robinhood et Ondo. Les cours des actions tokenisées correspondent à ces tokens précis. Les images supplémentaires sont conservées dans `public/tokens` et dans le cache PWA. Les mini-courbes des listes utilisent les points fournis par CoinGecko ; elles ne sont pas générées à partir de formes décoratives.
+
+L’onglet Markets propose Crypto/Stocks, les émetteurs, les favoris, le filtrage par réseau et le tri par volume ou capitalisation. La recherche propose les dernières consultations, les tokens, les DApps et le collage depuis le presse-papiers. Les filtres et les recherches récentes sont conservés localement.
 
 L’accès public sans clé a été vérifié. En cas de limitation sur l’hébergement, une clé Demo CoinGecko peut être configurée dans Vercel avec la variable serveur `COINGECKO_DEMO_API_KEY`. Ne pas lui ajouter le préfixe `VITE_` et ne pas la placer dans le code client.
 
@@ -32,6 +36,10 @@ Régénération du QR : `node scripts/generate-receive-qr.cjs`.
 npm run build
 npm run verify:market
 npm run verify:concept
+npm run verify:reference
+node scripts/verify-reference-flows.cjs --live
 ```
 
 Les tests d’API couvrent les paramètres refusés, le cache, la mutualisation, les pannes, les points historiques et les devises. Les tests WebKit utilisent un fournisseur simulé pour être reproductibles et contrôlent aussi les changements de crypto/adresse, Copy/Share, le QR constant, les périodes et l’absence de fausse courbe lors d’une panne. Les accès au fournisseur réel sont vérifiés séparément.
+
+`verify:reference` contrôle les six nouveaux écrans sur cinq tailles de fenêtre : envoi au destinataire, montant, marchés Crypto, marchés Stocks, swap et recherche. Il couvre également le carnet d’adresses, le collage, le clavier, Max, le solde insuffisant, les filtres, le glissement de confirmation et les recherches récentes. L’option `--live` utilise le véritable fournisseur et génère les captures correspondantes dans `qa/reference-flows`.

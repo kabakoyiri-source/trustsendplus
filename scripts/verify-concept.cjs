@@ -45,12 +45,13 @@ async function main(){
   await route.fulfill({path:file,contentType:({'.html':'text/html','.js':'application/javascript','.css':'text/css','.png':'image/png','.svg':'image/svg+xml','.json':'application/json','.woff2':'font/woff2'})[path.extname(file)]||'application/octet-stream'});
  });
  await context.addInitScript(()=>{
-  Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async value=>{window.__copied=value}}});
+  Object.defineProperty(navigator,'clipboard',{configurable:true,value:{readText:async()=>window.__clipboard||'',writeText:async value=>{window.__copied=value}}});
   Object.defineProperty(navigator,'share',{configurable:true,value:async value=>{window.__shared=value}});
  });
  const page=await context.newPage();const errors=[], external=[];
  page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{if(!r.url().startsWith(base)&&!r.url().startsWith('data:'))external.push(r.url())});
  const click=async label=>{
+  if(['Marchés','Accueil','Earn','Explorer'].includes(label)&&await page.getByRole('button',{name:'Fermer la recherche',exact:true}).count())await page.getByRole('button',{name:'Fermer la recherche',exact:true}).click();
   if(label==='Réglages'&&!await page.getByRole('button',{name:label,exact:true}).count())await page.locator('.wallet-selector').click();
   if(label==='Explorer'&&!await page.getByRole('button',{name:label,exact:true}).count())await page.getByRole('button',{name:'Earn',exact:true}).click();
   await page.getByRole('button',{name:label,exact:true}).click();
@@ -100,10 +101,10 @@ async function main(){
  await click('Réglages');await page.getByRole('button',{name:'Ajouter des fonds fictifs Créditer le portefeuille de démonstration'}).click();
  await page.locator('input[type=number]').fill('1000');await click('Ajouter des fonds fictifs');await back();await back();
  assert((await page.locator('.balance-block h1').textContent()).includes('1'));
- await click('Envoyer');await page.locator('textarea').fill('Alice démo');await page.getByRole('button',{name:'Continuer'}).click();
+ await click('Envoyer');await page.getByLabel('Choisir la crypto à envoyer').click();await page.getByLabel('Choisir USDC',{exact:true}).click();await page.locator('textarea').fill('Alice démo');await page.getByRole('button',{name:'Continuer'}).click();
  await page.getByLabel('Montant de la simulation').fill('999999');assert(await page.getByRole('alert').isVisible());assert(await page.getByRole('button',{name:'Vérifier la simulation'}).isDisabled());
  await page.getByLabel('Montant de la simulation').fill('10');await page.getByRole('button',{name:'Vérifier la simulation'}).click();await page.screenshot({path:path.join(out,'04-review.png')});await page.getByRole('button',{name:'Confirmer la simulation'}).click();await page.getByRole('button',{name:'Retour au portefeuille'}).click();
- await click('Swapper');await page.getByLabel('Montant de la simulation').fill('20');await page.getByRole('button',{name:'Vérifier la simulation'}).click();await page.getByRole('button',{name:'Confirmer la simulation'}).click();await page.getByRole('button',{name:'Retour au portefeuille'}).click();
+ await click('Swapper');await page.getByLabel('Choisir la crypto source').click();await page.getByLabel('Choisir USDC',{exact:true}).click();await page.getByLabel('Choisir la crypto destination').click();await page.getByLabel('Choisir ETH',{exact:true}).click();await page.getByLabel('Montant de la simulation').fill('20');await page.getByRole('slider',{name:'Glissez pour swapper',exact:true}).focus();await page.getByRole('slider',{name:'Glissez pour swapper',exact:true}).press('End');await page.getByRole('button',{name:'Confirmer la simulation'}).click();await page.getByRole('button',{name:'Retour au portefeuille'}).click();
  await click('Historique');assert.equal(await page.locator('.history-row').count(),3);await page.locator('.history-row').first().click();assert(await page.getByRole('heading',{name:'Simulation terminée'}).isVisible());await back();await back();
  await click('Recevoir');
  assert(await page.getByRole('heading',{name:'Receive USDC'}).isVisible());
