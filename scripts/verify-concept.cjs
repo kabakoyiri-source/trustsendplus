@@ -1,7 +1,7 @@
 const assert = require('node:assert/strict');
 const path = require('node:path');
 const fs = require('node:fs');
-const { marketFixture } = require('./market-fixture.cjs');
+const { marketFixture,perpetualFixture } = require('./market-fixture.cjs');
 process.env.PLAYWRIGHT_BROWSERS_PATH ||= path.join(__dirname, '../qa/browsers');
 const { webkit } = require('playwright');
 const base = 'https://concept.test';
@@ -40,6 +40,7 @@ async function main(){
  await context.route('https://concept.test/**',async route=>{
   const url=new URL(route.request().url());
   if(url.pathname==='/api/market')return route.fulfill({status:marketOffline?503:200,json:marketOffline?{error:'Temporary market outage'}:marketFixture(url.href)});
+  if(url.pathname==='/api/perpetuals')return route.fulfill({json:perpetualFixture()});
   let file=path.join(dist,decodeURIComponent(url.pathname));
   if(!fs.existsSync(file)||!fs.statSync(file).isFile())file=path.join(dist,'index.html');
   await route.fulfill({path:file,contentType:({'.html':'text/html','.js':'application/javascript','.css':'text/css','.png':'image/png','.svg':'image/svg+xml','.json':'application/json','.woff2':'font/woff2'})[path.extname(file)]||'application/octet-stream'});
@@ -51,9 +52,10 @@ async function main(){
  const page=await context.newPage();const errors=[], external=[];
  page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{if(!r.url().startsWith(base)&&!r.url().startsWith('data:'))external.push(r.url())});
  const click=async label=>{
-  if(['Marchés','Accueil','Earn','Explorer'].includes(label)&&await page.getByRole('button',{name:'Fermer la recherche',exact:true}).count())await page.getByRole('button',{name:'Fermer la recherche',exact:true}).click();
+  if(['Marchés','Accueil','Earn','Explorer','Perpétuels'].includes(label)&&await page.getByRole('button',{name:'Fermer la recherche',exact:true}).count())await page.getByRole('button',{name:'Fermer la recherche',exact:true}).click();
   if(label==='Réglages'&&!await page.getByRole('button',{name:label,exact:true}).count())await page.locator('.wallet-selector').click();
-  if(label==='Explorer'&&!await page.getByRole('button',{name:label,exact:true}).count())await page.getByRole('button',{name:'Earn',exact:true}).click();
+  if(label==='Earn'){await page.getByRole('button',{name:'Perpétuels',exact:true}).click();await page.getByRole('button',{name:'Paramètres des Perpétuels',exact:true}).click();await page.getByRole('button',{name:'Earn et staking',exact:true}).click();return}
+  if(label==='Explorer'&&!await page.getByRole('button',{name:label,exact:true}).count())await click('Earn');
   await page.getByRole('button',{name:label,exact:true}).click();
  };
  const back=()=>click('Retour');
@@ -131,7 +133,7 @@ async function main(){
  await page.getByText('Chart unavailable',{exact:false}).waitFor();assert.equal(await page.locator('.live-price-chart').count(),0,'An API failure must not display a fabricated curve');
  marketOffline=false;await click('Retry');await page.getByRole('img',{name:'Cours réel Bitcoin, 1M'}).waitFor();await back();
  await click('Accueil');await click('Réglages');await page.getByRole('button',{name:'Préférences Clair'}).click();await page.getByRole('button',{name:'Sombre'}).click();await page.screenshot({path:path.join(out,'06-dark.png')});await back();
- await page.getByRole('button',{name:'Portefeuilles 1'}).click();await page.getByRole('button',{name:'Ajouter un espace de démo'}).click();await page.getByPlaceholder('Ex. : Mes projets').fill('Deuxième espace');await page.getByRole('button',{name:'Enregistrer',exact:true}).click();assert.equal(await page.locator('.wallet-card').count(),2);await back();await back();assert((await page.locator('.balance-block h1').textContent()).includes('0,00'));
+ await page.getByRole('button',{name:'Portefeuilles 1'}).click();await page.getByRole('button',{name:'Ajouter un portefeuille',exact:true}).click();await page.getByRole('button',{name:/^Créer un nouveau portefeuille/}).click();await page.getByLabel('Nom du portefeuille',{exact:true}).fill('Deuxième espace');await click('Continuer');assert((await page.locator('.balance-block h1').textContent()).includes('0,00'));await page.locator('.wallet-selector').click();assert.equal(await page.locator('.wallet-card').count(),2);await back();
  await page.reload();assert.equal(await page.locator('.lock-screen').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(252, 252, 252)');await page.keyboard.type('787878');assert((await page.locator('.wallet-selector').textContent()).includes('Deuxième espace'));assert.equal(await page.locator('html').getAttribute('data-theme'),'dark');
  await click('Réglages');
  for(const name of ['Gérer les tokens','Réseaux','Sécurité','Notifications','Installer sur iPhone','À propos du concept']){await page.getByRole('button',{name,exact:true}).click();assert((await page.locator('main').innerText()).length>100);await back()}
@@ -139,11 +141,11 @@ async function main(){
  // Network filtering and token selection are independent of portfolio balances.
  await click('Réglages');await click('Gérer les tokens');await page.getByRole('button',{name:'Tous les réseaux',exact:true}).click();await page.getByRole('button',{name:'Solana',exact:true}).click();assert.equal(await page.locator('.asset-row').count(),1);await page.getByRole('switch',{name:'Afficher Solana'}).click();assert(await page.getByRole('switch',{name:'Afficher Solana'}).getAttribute('aria-checked')==='true');await back();await back();
  await page.locator('.wallet-selector').click();await page.locator('.wallet-card').first().click();
- await click('Acheter');await page.getByLabel('Montant de la simulation').fill('5');await page.getByRole('button',{name:'Vérifier la simulation'}).click();await page.getByRole('button',{name:'Confirmer la simulation'}).click();await page.getByRole('button',{name:'Retour au portefeuille'}).click();
+ await click('Acheter');await page.getByLabel('Montant de la simulation').fill('5');await click('Mode de paiement');await page.getByRole('dialog').getByRole('button',{name:/^Simulation locale /}).click();await page.getByRole('button',{name:'Vérifier la simulation'}).click();await page.getByRole('button',{name:'Confirmer la simulation'}).click();await page.getByRole('button',{name:'Retour au portefeuille'}).click();
  await click('Earn');await page.locator('.stake-row').filter({hasText:'Ethereum'}).click();await page.getByRole('button',{name:'Simuler un staking'}).click();await page.getByLabel('Montant de la simulation').fill('0.001');await page.getByRole('button',{name:'Vérifier la simulation'}).click();await page.getByRole('button',{name:'Confirmer la simulation'}).click();await page.getByRole('button',{name:'Retour au portefeuille'}).click();
  await click('Explorer');await page.locator('.dapp-row').first().click();await page.getByRole('button',{name:'Prévisualiser la connexion'}).click();assert(await page.getByRole('dialog').isVisible());await page.getByRole('button',{name:'Simuler la connexion',exact:true}).click();assert.equal(await page.getByRole('dialog').count(),0);await back();
  await page.getByRole('button',{name:'Assistant du concept Une visite guidée de votre prototype'}).click();await page.getByRole('button',{name:'Comment fonctionne la démo ?'}).click();await back();await back();
- await click('Marchés');await page.getByRole('button',{name:'Contrats perpétuels Découvrir l’interface de trading'}).click();await page.locator('.perp-card').first().click();assert(await page.getByRole('dialog').isVisible());await click('Fermer');await back();
+ await click('Marchés');await page.getByRole('button',{name:'Contrats perpétuels Découvrir l’interface de trading'}).click();await page.locator('.perps-token').first().click();assert(await page.getByRole('dialog').isVisible());await click('Fermer');await click('Marchés');
  await page.getByRole('button',{name:'Prédictions Explorer les scénarios fictifs'}).click();await page.getByRole('button',{name:'Oui · 62 %'}).first().click();await back();
  await click('Accueil');await click('Réglages');await page.getByRole('button',{name:'Sécurité',exact:true}).click();await page.getByRole('button',{name:'Réinitialiser les données de démo'}).click();await page.getByRole('button',{name:'Conserver mes données'}).click();assert.equal(await page.getByRole('dialog').count(),0);await page.getByRole('button',{name:'Réinitialiser les données de démo'}).click();await page.getByRole('button',{name:'Réinitialiser la démo',exact:true}).click();assert.equal(await page.locator('html').getAttribute('data-theme'),'light');assert.equal(await page.locator('.asset-row').count(),6);
  await page.getByRole('status').waitFor({state:'hidden'});

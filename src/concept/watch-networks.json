@@ -1,0 +1,9 @@
+[
+  {"id":"ethereum","name":"Ethereum","kind":"evm","native":"eth","symbol":"ETH","decimals":18,"color":"#627eec","coinId":"ethereum","explorer":"https://eth.blockscout.com","popular":true},
+  {"id":"solana","name":"Solana","kind":"solana","native":"sol","symbol":"SOL","decimals":9,"color":"#13111e","coinId":"solana","explorer":"https://solscan.io","popular":true},
+  {"id":"bsc","name":"BNB Smart Chain","kind":"binplorer","native":"bnb","symbol":"BNB","decimals":18,"color":"#080808","coinId":"binancecoin","explorer":"https://binplorer.com","popular":true},
+  {"id":"tron","name":"Tron","kind":"tron","native":"trx","symbol":"TRX","decimals":6,"color":"#ef173c","coinId":"tron","explorer":"https://tronscan.org/#","popular":true},
+  {"id":"bitcoin","name":"Bitcoin","kind":"bitcoin","native":"btc","symbol":"BTC","decimals":8,"color":"#f7931a","coinId":"bitcoin","explorer":"https://blockstream.info"},
+  {"id":"gnosis","name":"Gnosis","kind":"evm","native":"xdai","symbol":"xDAI","decimals":18,"color":"#04785a","coinId":"xdai","explorer":"https://gnosis.blockscout.com"},
+  {"id":"optimism","name":"Optimism","kind":"evm","native":"eth","symbol":"ETH","decimals":18,"color":"#ff0420","coinId":"ethereum","explorer":"https://optimism.blockscout.com"}
+]

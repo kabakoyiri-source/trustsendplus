@@ -7,7 +7,7 @@ import {walletMoney} from './WalletHome'
 function price(value,currency){if(!Number.isFinite(value))return '—';return (currency==='EUR'?'€':currency==='XOF'?'FCFA ':'$')+new Intl.NumberFormat('en-US',{minimumFractionDigits:2,maximumFractionDigits:value>=1?2:value>=.01?6:8}).format(value)}
 function Change({asset}){return <small className={(asset.market?.change24h??0)>=0?'positive':'negative'}>{Number.isFinite(asset.market?.change24h)?`${asset.market.change24h>=0?'+':''}${asset.market.change24h.toFixed(2)}%`:'—'}</small>}
 
-function MiniChart({asset}) {
+export function MiniChart({asset}) {
   const raw=asset.market?.sparkline||[]
   if(raw.length<2)return <span className="mini-chart-empty">—</span>
   const stride=Math.max(1,Math.floor(raw.length/28)),values=raw.filter((_,index)=>index%stride===0);if(values.at(-1)!==raw.at(-1))values.push(raw.at(-1))

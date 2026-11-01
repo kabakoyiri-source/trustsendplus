@@ -6,7 +6,7 @@ export const PERIODS={ '15m':{days:1,ms:15*60*1000},'1H':{days:1,ms:60*60*1000},
 function queryKey(params){return new URLSearchParams(params).toString()}
 function saved(key) {
   if(memory.has(key))return memory.get(key)
-  try {const value=JSON.parse(localStorage.getItem(`trust-market-v1:${key}`));if(value?.body?.source==='CoinGecko'&&Date.now()-value.at<MAX_AGE){memory.set(key,value);return value}}catch{}
+  try {const value=JSON.parse(localStorage.getItem(`trust-market-v1:${key}`));if(['CoinGecko','Hyperliquid'].includes(value?.body?.source)&&Date.now()-value.at<MAX_AGE){memory.set(key,value);return value}}catch{}
   return null
 }
 async function request(params,force=false) {
@@ -15,10 +15,10 @@ async function request(params,force=false) {
   if(pending.has(key))return pending.get(key)
   const promise=(async()=>{
     try {
-      const response=await fetch(`/api/market?${key}`,{cache:'no-store',signal:AbortSignal.timeout(15000)})
+      const response=await fetch(`/api/${params.type==='perpetuals'?'perpetuals':'market'}?${key}`,{cache:'no-store',signal:AbortSignal.timeout(params.type==='perpetuals'?25000:15000)})
       if(!response.ok)throw Error('Market data unavailable')
       const body=await response.json()
-      if(body.source!=='CoinGecko'||(params.type==='markets'&&!body.quotes)||(params.type==='chart'&&!Array.isArray(body.prices)))throw Error('Invalid market data')
+      if(body.source!==(params.type==='perpetuals'?'Hyperliquid':'CoinGecko')||(params.type==='perpetuals'&&!Array.isArray(body.markets))||(params.type==='markets'&&!body.quotes)||(params.type==='chart'&&!Array.isArray(body.prices)))throw Error('Invalid market data')
       const value={body,at:Date.now()};memory.set(key,value)
       try{localStorage.setItem(`trust-market-v1:${key}`,JSON.stringify(value))}catch{}
       return body
@@ -59,7 +59,7 @@ export function useMarketQuotes(base,currency,enabled) {
 
 export function useMarketChart(asset,currency,range) {
   const period=PERIODS[range]||PERIODS['1D']
-  const state=useMarketResource({type:'chart',asset:asset.id,currency:currency.toLowerCase(),days:String(period.days)})
+  const state=useMarketResource({type:'chart',asset:asset.catalogId||asset.id,currency:currency.toLowerCase(),days:String(period.days)},!asset.remote||Boolean(asset.catalogId))
   const prices=useMemo(()=>{
     const raw=state.data?.prices||[]
     if(!raw.length)return []

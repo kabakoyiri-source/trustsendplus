@@ -5,8 +5,8 @@ import AssetIcon from './AssetIcon'
 
 const DEMO_ADDRESSES={eth:'0xDEMO4EE9b488B608F5240FeA359525cA44c4ba22A',usdc:'0xDEMO4EE9b488B608F5240FeA359525cA44c4ba22A',bnb:'0xDEMO4EE9b488B608F5240FeA359525cA44c4ba22A',btc:'bc1qDEMO-bitcoin-no-real-deposits-000000',sol:'DEMO-Solana-NoRealDeposits-11111111111111',usdt:'T-DEMO-Tron-NoRealDeposits-111111111111',pol:'0xDEMO4EE9b488B608F5240FeA359525cA44c4ba22A'}
 
-export default function ReceivePanel({asset,assets,walletId,addresses,onAddress,onAsset,onClose,onDeposit,say}) {
-  const key=`${walletId}:${asset.id}`,address=addresses?.[key]||DEMO_ADDRESSES[asset.id]||DEMO_ADDRESSES.eth
+export default function ReceivePanel({asset,assets,walletId,addresses,onAddress,onAsset,onClose,onDeposit,say,readOnlyAddress}) {
+  const key=`${walletId}:${asset.id}`,address=addresses?.[key]||readOnlyAddress||DEMO_ADDRESSES[asset.id]||DEMO_ADDRESSES.eth
   const networkIcon={Ethereum:'eth',Bitcoin:'btc',Solana:'sol','BNB Smart Chain':'bnb',Tron:'usdt',Polygon:'pol'}[asset.network]||asset.id
   const [picker,setPicker]=useState(false),[editing,setEditing]=useState(false),[draft,setDraft]=useState('')
   async function copy(){try{await navigator.clipboard.writeText(address);say('Adresse copiée')}catch{say('Copie indisponible. Sélectionnez l’adresse affichée.')}}
@@ -19,7 +19,7 @@ export default function ReceivePanel({asset,assets,walletId,addresses,onAddress,
         <div className="receive-qr-art"><img src="/receive-qr.svg" alt="QR de démonstration, identique pour tous les actifs" data-testid="fixed-receive-qr"/><span className="receive-qr-logo"><span style={{background:asset.color}}><AssetIcon asset={asset}/></span></span></div>
         <button className="receive-address" aria-label="Modifier l’adresse affichée" onClick={()=>{setDraft(address);setEditing(true)}}>{address}</button>
       </div>
-      <div className="receive-notice"><FiAlertCircle/><p>Demo only. Do not send real assets to this address. {asset.network} network preview.</p></div>
+      <div className="receive-notice"><FiAlertCircle/><p>{readOnlyAddress?'Adresse surveillée en lecture seule. Le QR reste un QR de démonstration et n’encode pas cette adresse.':`Demo only. Do not send real assets to this address. ${asset.network} network preview.`}</p></div>
       <div className="receive-actions"><button onClick={copy}><span><FiCopy/></span>Copy</button><button onClick={share}><span><FiUpload/></span>Share</button></div>
       <button className="receive-coinbase" onClick={onDeposit}><span aria-hidden="true">C</span>Deposit from Coinbase</button>
     </div>

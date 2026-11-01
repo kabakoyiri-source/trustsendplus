@@ -1,10 +1,12 @@
 import React,{useState} from 'react'
 import {TokenArtwork} from './WalletArtwork'
+import {NetworkArtwork} from './WalletVisuals'
 
 export default function AssetIcon({asset}) {
   const [failedFor,setFailedFor]=useState(null)
   const common=['eth','btc','usdc','usdt','sol','bnb','pol','hype','whype']
-  return <span className="asset-icon-art" style={{background:asset.color||'#eee'}} aria-hidden="true">{common.includes(asset.id)?<TokenArtwork id={asset.id==='whype'?'hype':asset.id}/>:failedFor!==asset.id?<img src={`/tokens/${asset.id}.png`} alt="" onError={()=>setFailedFor(asset.id)}/>:<span className="asset-icon-initial">{asset.symbol.slice(0,2)}</span>}</span>
+  const id=asset.catalogId||asset.id,source=asset.remote?asset.logoUrl:`/tokens/${asset.id}.png`
+  return <span className="asset-icon-art" style={{background:asset.color||'#eee'}} aria-hidden="true">{common.includes(id)?<TokenArtwork id={id==='whype'?'hype':id}/>:asset.remote&&asset.native?<NetworkArtwork id={asset.networkId}/>:source&&failedFor!==asset.id?<img src={source} alt="" onError={()=>setFailedFor(asset.id)}/>:<span className="asset-icon-initial">{asset.symbol.slice(0,2)}</span>}</span>
 }
 
 export function AssetNetworkBadge({asset,className='browse-network-mark',hideNative=false}) {
