@@ -14,10 +14,10 @@ La mise en page utilise des marges de 16 px, des icônes de tokens vectorielles,
 | --- | --- |
 | Entrée | Accès direct au code PIN à six chiffres, écran épuré suivant la référence, clavier tactile et physique, erreur PIN, verrouillage |
 | Portefeuille | Accueil conforme à l’ordre des captures, solde masquable, en-tête au défilement, tokens, contrats perpétuels, prédictions, assistant, surveillance et personnalisation |
-| Marchés | Tendances, favoris, gagnants, recherche, fiches d'actifs, six périodes de graphique et inspection au pointeur |
+| Marchés | Prix et variations CoinGecko, fiches, détails, liens, sept périodes réelles de graphique et inspection au pointeur |
 | Envoi | Destinataire fictif, carnet de trois contacts, sélection d'actif, montant, maximum, solde insuffisant, vérification, confirmation |
-| Réception | Motif décoratif explicitement non scannable, identifiant fictif copiable, crédit simulé |
-| Swap | Choix source et destination, inversion, taux figé, tolérance illustrative, revue et confirmation |
+| Réception | Volet conforme à la référence, QR de démonstration fixe, crypto et adresse modifiables, Copy/Share et dépôt Coinbase simulé |
+| Swap | Choix source et destination, inversion, taux issu des cours actuels, tolérance illustrative, revue et confirmation locale |
 | Achat | Crédit fictif sans paiement, revue, confirmation |
 | Activité | Historique local par portefeuille, filtres, détails et identifiants locaux |
 | Earn | Allocations de session, actifs de staking, fiche validateur fictif, parcours de simulation |
@@ -30,8 +30,8 @@ La mise en page utilise des marges de 16 px, des icônes de tokens vectorielles,
 
 ## Périmètre et limites
 
-- Aucun backend, appel API, blockchain, génération de wallet, clé, phrase de récupération ou transaction réelle dans le nouveau point d'entrée.
-- Données et cours fictifs. Taux d'affichage figés : 1 EUR = 1,114 USD ou 655,957 XOF.
+- Les cours, variations, graphiques et informations de marché sont réels et fournis par CoinGecko via la route serveur `/api/market`. Les soldes et opérations restent fictifs ; aucune blockchain, clé, phrase de récupération ni transaction réelle n’est utilisée. Voir `MARKET_DATA.md`.
+- Les cours EUR et USD sont demandés dans la devise choisie. Le FCFA suit la cotation EUR avec la parité 655,957. Les anciennes données de marché figées ne sont plus affichées.
 - Le PIN fixe 787878 est une barrière de présentation, pas une mesure de sécurité. Ne pas saisir de secret réel.
 - Les portefeuilles, soldes, préférences et opérations persistent dans localStorage sous `trust-concept-local-v1`. L'allocation Earn n'est conservée que pendant la session.
 - Ancien projet bancaire conservé dans les anciens modules de `src` pour référence. Il n'est plus importé par `src/main.jsx`. Ses tests historiques ne valident pas le nouveau concept.

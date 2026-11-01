@@ -13,7 +13,7 @@ export function pwaBuild() {
     generateBundle(_options, bundle) {
       const manifest = JSON.parse(fs.readFileSync(path.join(publicDir, 'manifest.json'), 'utf8'))
       const staticPaths = [...new Set([
-        '/manifest.json', '/concept-icon.svg', '/concept-icon-v3.svg', '/concept-icon-180-v3.png',
+        '/manifest.json', '/concept-icon.svg', '/concept-icon-v3.svg', '/concept-icon-180-v3.png', '/receive-qr.svg',
         ...['Regular','Medium','SemiBold','ExtraBold'].map(weight => `/fonts/Inter-${weight}.woff2`),
         ...manifest.icons.map(icon => icon.src),
       ])]

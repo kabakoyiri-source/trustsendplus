@@ -1,6 +1,7 @@
 const assert = require('node:assert/strict');
 const path = require('node:path');
 const fs = require('node:fs');
+const { marketFixture } = require('./market-fixture.cjs');
 process.env.PLAYWRIGHT_BROWSERS_PATH ||= path.join(__dirname, '../qa/browsers');
 const { webkit } = require('playwright');
 const base = 'https://concept.test';
@@ -35,7 +36,18 @@ async function main(){
  const browser=await webkit.launch({headless:true});
  const context=await browser.newContext({viewport:{width:393,height:852},isMobile:true,hasTouch:true,deviceScaleFactor:2,serviceWorkers:'block',reducedMotion:'reduce'});
  // Serve the real production files through browser routing: this environment blocks WebKit loopback connections.
- await context.route('https://concept.test/**',async route=>{let file=path.join(dist,decodeURIComponent(new URL(route.request().url()).pathname));if(!fs.existsSync(file)||!fs.statSync(file).isFile())file=path.join(dist,'index.html');await route.fulfill({path:file,contentType:({'.html':'text/html','.js':'application/javascript','.css':'text/css','.png':'image/png','.svg':'image/svg+xml','.json':'application/json'})[path.extname(file)]||'application/octet-stream'})});
+ let marketOffline=false;
+ await context.route('https://concept.test/**',async route=>{
+  const url=new URL(route.request().url());
+  if(url.pathname==='/api/market')return route.fulfill({status:marketOffline?503:200,json:marketOffline?{error:'Temporary market outage'}:marketFixture(url.href)});
+  let file=path.join(dist,decodeURIComponent(url.pathname));
+  if(!fs.existsSync(file)||!fs.statSync(file).isFile())file=path.join(dist,'index.html');
+  await route.fulfill({path:file,contentType:({'.html':'text/html','.js':'application/javascript','.css':'text/css','.png':'image/png','.svg':'image/svg+xml','.json':'application/json','.woff2':'font/woff2'})[path.extname(file)]||'application/octet-stream'});
+ });
+ await context.addInitScript(()=>{
+  Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async value=>{window.__copied=value}}});
+  Object.defineProperty(navigator,'share',{configurable:true,value:async value=>{window.__shared=value}});
+ });
  const page=await context.newPage();const errors=[], external=[];
  page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{if(!r.url().startsWith(base)&&!r.url().startsWith('data:'))external.push(r.url())});
  const click=async label=>{
@@ -66,6 +78,7 @@ async function main(){
  for(const k of '111111')await click(k);assert(await page.getByRole('status').textContent().then(t=>t.includes('incorrect')));
  await page.screenshot({path:path.join(out,'02-pin.png')});await unlock();
  assert(await page.getByTestId('wallet-app').isVisible());
+ await page.waitForFunction(()=>document.querySelector('.balance-block h1')?.textContent==='€223,20');
  assert.equal(await page.locator('.balance-block h1').textContent(),'€223,20');
  assert.equal(await page.locator('.wallet-selector').textContent(),'Youg client');
  assert.equal(await page.locator('.nav-pill button').count(),3);
@@ -92,10 +105,30 @@ async function main(){
  await page.getByLabel('Montant de la simulation').fill('10');await page.getByRole('button',{name:'Vérifier la simulation'}).click();await page.screenshot({path:path.join(out,'04-review.png')});await page.getByRole('button',{name:'Confirmer la simulation'}).click();await page.getByRole('button',{name:'Retour au portefeuille'}).click();
  await click('Swapper');await page.getByLabel('Montant de la simulation').fill('20');await page.getByRole('button',{name:'Vérifier la simulation'}).click();await page.getByRole('button',{name:'Confirmer la simulation'}).click();await page.getByRole('button',{name:'Retour au portefeuille'}).click();
  await click('Historique');assert.equal(await page.locator('.history-row').count(),3);await page.locator('.history-row').first().click();assert(await page.getByRole('heading',{name:'Simulation terminée'}).isVisible());await back();await back();
- await click('Recevoir');assert(await page.getByLabel('Motif décoratif de démonstration, pas un QR de paiement').isVisible());await back();
+ await click('Recevoir');
+ assert(await page.getByRole('heading',{name:'Receive USDC'}).isVisible());
+ const qr=await page.getByTestId('fixed-receive-qr').getAttribute('src');
+ await page.getByLabel('Choisir la crypto à recevoir').click();await page.getByLabel('Choisir ETH',{exact:true}).click();
+ assert(await page.getByRole('heading',{name:'Receive ETH'}).isVisible());
+ assert.equal(await page.getByTestId('fixed-receive-qr').getAttribute('src'),qr);
+ await page.screenshot({path:path.join(out,'07-receive-eth.png')});
+ await page.getByLabel('Modifier l’adresse affichée').click();await page.getByLabel('Adresse',{exact:true}).fill('0xDEMO-edited-address');await click('Enregistrer');
+ assert.equal(await page.getByTestId('fixed-receive-qr').getAttribute('src'),qr,'Editing an address must not regenerate the QR');
+ await click('Copy');assert.equal(await page.evaluate(()=>window.__copied),'0xDEMO-edited-address');
+ await click('Share');assert((await page.evaluate(()=>window.__shared.text)).includes('0xDEMO-edited-address'));
+ await page.getByLabel('Choisir la crypto à recevoir').click();await page.getByLabel('Choisir BTC',{exact:true}).click();assert.equal(await page.getByTestId('fixed-receive-qr').getAttribute('src'),qr);
+ await click('Deposit from Coinbase');assert(await page.getByRole('dialog').isVisible());await click('Fermer');await back();
  for(const tab of ['Marchés','Earn','Explorer','Recherche']){await click(tab);assert((await page.locator('main').innerText()).length>150)}
  await page.getByLabel('Rechercher un actif').fill('Bitcoin');assert.equal(await page.locator('.asset-row').count(),1);await page.getByLabel('Rechercher un actif').fill('zzzzz');assert(await page.getByRole('heading',{name:'Aucun résultat'}).isVisible());
- await click('Marchés');await page.locator('.asset-main').filter({hasText:'BTC'}).click();await click('1S');await click('Favori');await page.screenshot({path:path.join(out,'05-asset.png')});await back();
+ await click('Marchés');await page.locator('.asset-main').filter({hasText:'BTC'}).click();await click('1W');await click('Favori');
+ await page.getByRole('img',{name:'Cours réel Bitcoin, 1W'}).waitFor();
+ await page.screenshot({path:path.join(out,'05-asset.png')});
+ assert(await page.getByRole('button',{name:'Buy',exact:true}).isVisible());assert(await page.getByRole('button',{name:'Sell',exact:true}).isVisible());
+ await page.locator('main').evaluate(el=>{el.scrollTop=650});await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));assert(await page.locator('.asset-page-header').isVisible());await page.screenshot({path:path.join(out,'08-asset-details.png')});
+ await page.locator('main').evaluate(el=>{el.scrollTop=el.scrollHeight});await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));await page.screenshot({path:path.join(out,'09-asset-history.png')});
+ await page.locator('main').evaluate(el=>{el.scrollTop=0});marketOffline=true;await click('1M');
+ await page.getByText('Chart unavailable',{exact:false}).waitFor();assert.equal(await page.locator('.live-price-chart').count(),0,'An API failure must not display a fabricated curve');
+ marketOffline=false;await click('Retry');await page.getByRole('img',{name:'Cours réel Bitcoin, 1M'}).waitFor();await back();
  await click('Accueil');await click('Réglages');await page.getByRole('button',{name:'Préférences Clair'}).click();await page.getByRole('button',{name:'Sombre'}).click();await page.screenshot({path:path.join(out,'06-dark.png')});await back();
  await page.getByRole('button',{name:'Portefeuilles 1'}).click();await page.getByRole('button',{name:'Ajouter un espace de démo'}).click();await page.getByPlaceholder('Ex. : Mes projets').fill('Deuxième espace');await page.getByRole('button',{name:'Enregistrer',exact:true}).click();assert.equal(await page.locator('.wallet-card').count(),2);await back();await back();assert((await page.locator('.balance-block h1').textContent()).includes('0,00'));
  await page.reload();assert.equal(await page.locator('.lock-screen').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(252, 252, 252)');await page.keyboard.type('787878');assert((await page.locator('.wallet-selector').textContent()).includes('Deuxième espace'));assert.equal(await page.locator('html').getAttribute('data-theme'),'dark');

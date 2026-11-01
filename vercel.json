@@ -9,7 +9,7 @@
   ],
   "rewrites": [
     {
-      "source": "/((?!assets(?:/|$)|images(?:/|$)|fonts(?:/|$)|api(?:/|$)|concept-icon[^/]*$|apple-touch-icon\\.png$|service-worker\\.js$|manifest\\.json$|index\\.html$).*)",
+      "source": "/((?!assets(?:/|$)|images(?:/|$)|fonts(?:/|$)|api(?:/|$)|concept-icon[^/]*$|receive-qr\\.svg$|apple-touch-icon\\.png$|service-worker\\.js$|manifest\\.json$|index\\.html$).*)",
       "destination": "/index.html"
     }
   ]

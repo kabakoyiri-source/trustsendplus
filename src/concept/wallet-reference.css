@@ -110,6 +110,7 @@
 .wallet-home .balance-block p { margin-top: 9px; gap: 5px; font-size: 16px; font-weight: 600; line-height: 22px; letter-spacing: -.025em; }
 .wallet-home .balance-block p > span:first-child { font-size: inherit; }
 .gain-arrow { width: 13px; height: 8px; background: currentColor; clip-path: polygon(50% 0, 100% 100%, 0 100%); border-radius: 2px; margin-right: 3px; }
+.negative .gain-arrow { transform: rotate(180deg); }
 .wallet-home .quick-actions { gap: 16px; margin: 0; }
 .wallet-home .quick-actions > button > span { height: 56px; border-radius: 16px; }
 .wallet-home .quick-actions svg { width: 27px; height: 27px; stroke-width: 2.2; }

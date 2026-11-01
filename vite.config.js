@@ -1,9 +1,18 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { pwaBuild } from './scripts/pwa-build'
+import marketHandler from './api/market'
 
 export default defineConfig({
-  plugins: [react(), pwaBuild()],
+  plugins: [react(), pwaBuild(), {
+    name: 'market-api-development',
+    configureServer(server) {
+      server.middlewares.use((req,res,next)=>{
+        if(new URL(req.url,'http://localhost').pathname==='/api/market')return marketHandler(req,res);
+        next();
+      });
+    },
+  }],
   server: {
     port: 3001,
     allowedHosts: [

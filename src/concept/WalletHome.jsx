@@ -2,8 +2,7 @@ import React from 'react'
 import { FiArrowDown, FiArrowUpRight, FiChevronRight, FiPlus, FiRefreshCw, FiSearch, FiTrendingUp, FiZap } from 'react-icons/fi'
 import { GlobeArtwork, HistoryGlyph, HomeGlyph, InfinityGlyph, PerpetualBadge, PredictionFlag, ScanGlyph, SlidersGlyph, SparkleGlyph, StockArtwork, TokenArtwork, WalletGlyph } from './WalletArtwork'
 
-const CAPS = {btc:'1.38T', bnb:'81.91B', sol:'50.05B', eth:'242.91B', usdc:'54.2B', usdt:'145.2B', pol:'1.8B'}
-const assetGain=(asset,wallet)=>asset.id==='usdc'?(wallet.balances[asset.id]||0)/asset.balance*.2989:(wallet.balances[asset.id]||0)*asset.price*.0013
+const assetGain=(asset,wallet)=>{const units=wallet.balances[asset.id]||0;return units===0?0:Number.isFinite(asset.market?.priceChange24h)?units*asset.market.priceChange24h:null}
 
 function HomeHeading({children,onClick}) { return <button className="section-heading" onClick={onClick}><h2>{children}</h2><FiChevronRight/></button> }
 
@@ -16,13 +15,14 @@ function HomeAssetRow({asset,market=false,data,wallet,Coin,onAsset}) {
   const money=(n,precision=2)=>walletMoney(n,data.currency,precision)
   return <div className="asset-row"><button className="asset-main" onClick={()=>onAsset(asset.id)}>
     <Coin asset={asset}/>
-    <span className="row-text"><strong>{market?asset.symbol:asset.name}</strong><small>{market?`${data.currency==='USD'?'$':data.currency==='XOF'?'FCFA ':'€'}${CAPS[asset.id]} Cap.`:`${new Intl.NumberFormat('en-US',{maximumFractionDigits:6,useGrouping:false}).format(balance)} ${asset.symbol}`}</small></span>
-    <span className="asset-value"><strong>{data.hide&&!market?'••••••':money(market?asset.price:balance*asset.price)}</strong><small className={market?(asset.change>=0?'positive':'negative'):balance>0?'positive':'muted'}>{market?`${asset.change>0?'+':''}${asset.change.toFixed(2)}%`:balance>0?`+${money(assetGain(asset,wallet),4)}`:money(0)}</small></span>
+    <span className="row-text"><strong>{market?asset.symbol:asset.name}</strong><small>{market?`${data.currency==='USD'?'$':data.currency==='XOF'?'FCFA ':'€'}${asset.cap} Cap.`:`${new Intl.NumberFormat('en-US',{maximumFractionDigits:6,useGrouping:false}).format(balance)} ${asset.symbol}`}</small></span>
+    <span className="asset-value"><strong>{data.hide&&!market?'••••••':money(market?asset.price:balance===0?0:Number.isFinite(asset.price)?balance*asset.price:null)}</strong><small className={market?(asset.change>=0?'positive':'negative'):balance>0?(assetGain(asset,wallet)>=0?'positive':'negative'):'muted'}>{market?Number.isFinite(asset.market?.change24h)?`${asset.change>0?'+':''}${asset.change.toFixed(2)}%`:'—':balance>0?Number.isFinite(assetGain(asset,wallet))?`${assetGain(asset,wallet)>=0?'+':''}${money(assetGain(asset,wallet),4)}`:'—':money(0)}</small></span>
   </button></div>
 }
 
 export function walletMoney(value, currency, precision=2) {
-  const amount=value*(currency==='USD'?1.114:currency==='XOF'?655.957:1)
+  if(!Number.isFinite(value))return '—'
+  const amount=value
   const number=new Intl.NumberFormat('en-US',{minimumFractionDigits:precision,maximumFractionDigits:precision,useGrouping:false}).format(Math.abs(amount)).replace('.',',')
   return `${amount<0?'-':''}${currency==='USD'?'$':currency==='XOF'?'FCFA ': '€'}${number}`
 }
@@ -49,7 +49,8 @@ export function WalletNavigation({tab,onChange}) {
 
 export default function WalletHome({data,wallet,assets,total,Coin,onAction,onRoute,onAsset,onMarkets,onCustomize,onToggleBalance}) {
   const money=(n,precision=2)=>walletMoney(n,data.currency,precision)
-  const totalGain=assets.reduce((sum,a)=>sum+assetGain(a,wallet),0)
+  const totalGain=assets.some(a=>assetGain(a,wallet)===null)?null:assets.reduce((sum,a)=>sum+assetGain(a,wallet),0)
+  const percentage=Number.isFinite(totalGain)&&Number.isFinite(total)&&total-totalGain>0?totalGain/(total-totalGain)*100:null
   return <div className="wallet-home">
     <button className="announcement" onClick={onMarkets}>
       <span className="announcement-pages" aria-hidden="true"><i/><i/><i/></span><StockArtwork/>
@@ -57,7 +58,7 @@ export default function WalletHome({data,wallet,assets,total,Coin,onAction,onRou
     </button>
     <div className="balance-block">
       <button className="wallet-balance-toggle" aria-label={data.hide?'Afficher le solde':'Masquer le solde'} onClick={onToggleBalance}><h1>{data.hide?'••••••':money(total)}</h1></button>
-      <p className="positive"><span className="gain-arrow" aria-hidden="true"/>{money(totalGain,4)} <span>(0.13%)</span></p>
+      <p className={(totalGain??0)>=0?'positive':'negative'}><span className="gain-arrow" aria-hidden="true"/>{money(totalGain,4)} <span>{percentage!==null?`(${percentage.toFixed(2)}%)`:''}</span></p>
     </div>
     <HomeActions onAction={onAction}/>
     <section className="section home-tokens">

@@ -19,6 +19,7 @@
     "dev": "vite --force",
     "build": "vite build",
     "verify:concept": "node scripts/verify-concept.cjs",
+    "verify:market": "node --test scripts/verify-market-api.cjs",
     "build:qa": "node scripts/build-qa.cjs",
     "preview": "vite preview",
     "verify:mobile": "node scripts/verify-mobile.cjs",
@@ -33,6 +34,7 @@
     "bcryptjs": "^3.0.3",
     "mongodb": "^7.7.0",
     "playwright": "1.62.1",
+    "qrcode": "^1.5.4",
     "sharp": "0.35.4"
   }
 }
