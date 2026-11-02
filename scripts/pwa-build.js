@@ -16,6 +16,7 @@ export function pwaBuild() {
       const staticPaths = [...new Set([
         '/manifest.json', '/concept-icon.svg', '/concept-icon-v3.svg', '/concept-icon-180-v3.png', '/receive-qr.svg',
         ...['Regular','Medium','SemiBold','ExtraBold'].map(weight => `/fonts/Inter-${weight}.woff2`),
+        '/fonts/Roboto-Euro.woff2',
         ...catalog.map(asset => `/tokens/${asset.id}.png`),
         ...manifest.icons.map(icon => icon.src),
       ])]

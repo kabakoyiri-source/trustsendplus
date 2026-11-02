@@ -1,4 +1,13 @@
 /* Wallet layout measured against the three supplied mobile captures. */
+/* Use the reference-style euro glyph while keeping Inter for the other characters. */
+@font-face {
+  font-family: 'Wallet Euro';
+  src: url('/fonts/Roboto-Euro.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+20AC;
+}
 @font-face {
   font-family: 'Wallet Inter';
   src: url('/fonts/Inter-Regular.woff2') format('woff2');
@@ -20,7 +29,7 @@
   --wallet-safe-top: env(safe-area-inset-top, 0px);
   container-type: inline-size;
   padding-top: 0;
-  font-family: 'Wallet Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Wallet Euro', 'Wallet Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   font-optical-sizing: auto;
 }
 .wallet-content {
