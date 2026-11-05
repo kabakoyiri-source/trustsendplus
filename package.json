@@ -9,6 +9,7 @@
   "dependencies": {
     "@supabase/postgrest-js": "^2.118.0",
     "@vitejs/plugin-react": "^4.2.1",
+    "qrcode": "^1.5.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.12.0",
@@ -26,6 +27,7 @@
     "verify:watch-api": "node --test scripts/verify-watch-api.cjs",
     "verify:wallets": "node scripts/verify-wallet-flows.cjs",
     "verify:watch-layout": "node scripts/verify-watch-layout.cjs",
+    "verify:receive-qr": "node scripts/verify-receive-qr.cjs",
     "build:qa": "node scripts/build-qa.cjs",
     "preview": "vite preview",
     "verify:mobile": "node scripts/verify-mobile.cjs",
@@ -38,9 +40,9 @@
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.10",
     "bcryptjs": "^3.0.3",
+    "jsqr": "1.4.0",
     "mongodb": "^7.7.0",
     "playwright": "1.62.1",
-    "qrcode": "^1.5.4",
     "sharp": "0.35.4"
   }
 }

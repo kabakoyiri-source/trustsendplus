@@ -26,9 +26,13 @@ Si CoinGecko est indisponible, les dernières données connues sont signalées c
 
 Le volet de réception reprend la référence : badge réseau, carte QR, adresse, Copy/Share et bouton Coinbase. La crypto et l’adresse affichée peuvent être modifiées ; les adresses sont conservées par portefeuille et actif.
 
-Le fichier `public/receive-qr.svg` est constant. Son contenu est **Trust Concept DEMO. No real crypto deposits.**, et n’encode aucune adresse de paiement. Le logo posé au centre suit la crypto choisie, sans changer la matrice du QR. Les adresses par défaut comportent `DEMO` et ne sont pas des adresses de dépôt réelles. La mention de démonstration reste visible sur le volet. Le bouton Coinbase ouvre une simulation locale, sans connexion ni transfert.
+Réglages → **Changer les adresses**, juste sous Ajouter des fonds fictifs, permet aussi de choisir une crypto, rechercher un token, saisir ou coller son adresse de réception, la valider et l’enregistrer. Le bouton Voir le QR code ouvre Recevoir avec cette crypto. Utiliser l’adresse par défaut retire uniquement la personnalisation de cette crypto et de ce portefeuille. Cet écran et Recevoir utilisent la même configuration ; les soldes et l’adresse blockchain surveillée ne sont pas modifiés.
 
-Régénération du QR : `node scripts/generate-receive-qr.cjs`.
+Le QR est généré dans le navigateur à partir de l’adresse publique affichée, avec correction d’erreurs élevée et marge blanche de quatre modules. Le logo central suit la crypto sélectionnée. Changer l’adresse recalcule le QR ; deux cryptos ayant la même adresse ont le même contenu encodé. Copy et Share utilisent aussi cette adresse. Aucun service QR externe n’est contacté.
+
+Les réseaux EVM reprennent par défaut l’adresse fournie `0x91237DB0DAFBC93195b7CcAcEbA9D0a2EB654935`. Les autres réseaux demandent une adresse réelle saisie par l’utilisateur ; aucune adresse fictive ni adresse EVM incompatible n’est utilisée en remplacement. Les formats, tailles Base58 et checksums Bitcoin/Tron sont contrôlés avant affichage du QR. Une adresse invalide ou absente ne produit aucun QR et ne peut pas être copiée ou partagée. Les adresses enregistrées restent propres au portefeuille et à l’actif. Le bouton Coinbase conserve son parcours de simulation locale.
+
+`public/receive-qr.svg` contient aussi le QR de l’adresse Ethereum par défaut ; régénération : `node scripts/generate-receive-qr.cjs`. L’application utilise la génération dynamique dans `src/concept/receive-qr.mjs`.
 
 ## Vérifications
 
@@ -40,7 +44,7 @@ npm run verify:reference
 node scripts/verify-reference-flows.cjs --live
 ```
 
-Les tests d’API couvrent les paramètres refusés, le cache, la mutualisation, les pannes, les points historiques et les devises. Les tests WebKit utilisent un fournisseur simulé pour être reproductibles et contrôlent aussi les changements de crypto/adresse, Copy/Share, le QR constant, les périodes et l’absence de fausse courbe lors d’une panne. Les accès au fournisseur réel sont vérifiés séparément.
+Les tests d’API couvrent les paramètres refusés, le cache, la mutualisation, les pannes, les points historiques et les devises. Les tests WebKit utilisent un fournisseur simulé pour être reproductibles et contrôlent aussi les changements de crypto/adresse, Copy/Share, le QR encodant l’adresse affichée, les périodes et l’absence de fausse courbe lors d’une panne. Les accès au fournisseur réel sont vérifiés séparément.
 
 `verify:reference` contrôle les six nouveaux écrans sur cinq tailles de fenêtre : envoi au destinataire, montant, marchés Crypto, marchés Stocks, swap et recherche. Il couvre également le carnet d’adresses, le collage, le clavier, Max, le solde insuffisant, les filtres, le glissement de confirmation et les recherches récentes. L’option `--live` utilise le véritable fournisseur et génère les captures correspondantes dans `qa/reference-flows`.
 

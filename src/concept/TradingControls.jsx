@@ -13,12 +13,12 @@ export function NumericKeypad({value,onChange}) {
   return <div className="numeric-keypad" role="group" aria-label="Clavier du montant">{['1','2','3','4','5','6','7','8','9','.','0','delete'].map(key=><button type="button" key={key} aria-label={key==='delete'?'Effacer le montant':key==='.'?'Virgule':key} onClick={()=>enter(key)}>{key==='delete'?<FiDelete/>:key==='.'?',':key}</button>)}</div>
 }
 
-export function TokenPicker({assets,selected,balances={},onPick,onClose}) {
+export function TokenPicker({assets,selected,balances={},showBalances=true,onPick,onClose}) {
   const [query,setQuery]=useState('')
   const rows=assets.filter(asset=>`${asset.name} ${asset.symbol} ${asset.network}`.toLowerCase().includes(query.toLowerCase()))
   return <TradingDialog title="Choisir une crypto" onClose={onClose}>
     <label className="trading-token-search"><FiSearch/><input aria-label="Rechercher une crypto" placeholder="Rechercher" value={query} onChange={event=>setQuery(event.target.value)}/></label>
-    <div className="trading-token-list">{rows.map(asset=><button key={asset.id} aria-label={`Choisir ${asset.symbol}`} onClick={()=>onPick(asset.id)}><AssetIcon asset={asset}/><span><strong>{asset.symbol}</strong><small>{asset.name} · {asset.network}</small></span><small>{new Intl.NumberFormat('fr-FR',{maximumFractionDigits:8,useGrouping:false}).format(balances[asset.id]||0)}</small>{selected===asset.id&&<FiCheck/>}</button>)}{!rows.length&&<p className="empty">Aucun résultat</p>}</div>
+    <div className="trading-token-list">{rows.map(asset=><button key={asset.id} aria-label={`Choisir ${asset.symbol}`} onClick={()=>onPick(asset.id)}><AssetIcon asset={asset}/><span><strong>{asset.symbol}</strong><small>{asset.name} · {asset.network}</small></span>{showBalances&&<small>{new Intl.NumberFormat('fr-FR',{maximumFractionDigits:8,useGrouping:false}).format(balances[asset.id]||0)}</small>}{selected===asset.id&&<FiCheck/>}</button>)}{!rows.length&&<p className="empty">Aucun résultat</p>}</div>
   </TradingDialog>
 }
 

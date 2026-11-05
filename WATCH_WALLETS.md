@@ -8,7 +8,7 @@ Le portefeuille ouvert par défaut reste « Young client » (`main`). C’est un
 
 `main-wallet-seed.json` conserve le relevé initial, son adresse source et les prix de valorisation fixes utilisés pour les simulations, y compris les conversions de devise. La consultation des cours, graphiques, marchés et de la liste de surveillance reste actuelle. **View-only wallet** conserve seul la consultation et l’actualisation des soldes, tokens et opérations blockchain de cette adresse.
 
-La migration remplace une seule fois l’ancienne configuration du principal nommé « Mon portefeuille », « Youg client » ou « Young client », y compris la configuration temporairement reliée en lecture seule. Les anciens soldes fictifs restent sauvegardés dans `previousDemoBalances` et les simulations locales sont conservées. Le marqueur `mainStaticSeeded` empêche tout nouveau réensemencement aux ouvertures suivantes. Les autres portefeuilles et noms personnalisés sont conservés. Les anciennes adresses de réception commençant par `0xDEMO` sont remplacées une seule fois par l’adresse fournie. Les adresses personnalisées et le QR constant restent conservés.
+La migration remplace une seule fois l’ancienne configuration du principal nommé « Mon portefeuille », « Youg client » ou « Young client », y compris la configuration temporairement reliée en lecture seule. Les anciens soldes fictifs restent sauvegardés dans `previousDemoBalances` et les simulations locales sont conservées. Le marqueur `mainStaticSeeded` empêche tout nouveau réensemencement aux ouvertures suivantes. Les autres portefeuilles et noms personnalisés sont conservés. Les anciennes adresses de réception commençant par `0xDEMO` sont remplacées une seule fois par l’adresse fournie. Les adresses personnalisées restent conservées ; les QR suivent l’adresse affichée.
 
 L’accueil en lecture seule affiche le badge et le bouton de copie, le solde groupé avec des espaces, la variation calculée sur les actifs disposant de données, deux principaux tokens puis Tout voir, l’assistant et la surveillance. Les détails du fournisseur, la valorisation partielle et Actualiser sont accessibles en touchant le badge. Les simulations Envoyer/Recevoir restent disponibles dans la fiche d’un token. La navigation inférieure utilise des icônes grises plus fines.
 
@@ -35,7 +35,7 @@ Le secours Ethereum a ses propres données indexées et peut avoir une profondeu
 
 ## Simulations et données locales
 
-Les portefeuilles de démonstration conservent leurs soldes fictifs habituels. Pour un portefeuille surveillé, Envoyer, Recevoir, Achat/Vente et Swap enregistrent uniquement des simulations locales : ils ne changent pas les soldes observés et n’envoient aucune transaction. Ces lignes sont marquées Simulation et peuvent être isolées dans Activity. Le QR de réception reste le QR de démonstration constant demandé précédemment ; il n’encode pas l’adresse surveillée.
+Les portefeuilles de démonstration conservent leurs soldes fictifs habituels. Les parcours Envoyer, Achat/Vente, Swap et le crédit manuel via Coinbase restent des simulations locales : ils ne changent pas les soldes observés et n’envoient aucune transaction. Ces lignes sont marquées Simulation et peuvent être isolées dans Activity. Le QR de réception encode désormais exactement l’adresse publique affichée, y compris l’adresse surveillée en lecture seule. Il se recalcule lorsque cette adresse change. La génération est locale et n’envoie aucune transaction.
 
 Les noms, préférences et simulations restent dans `trust-concept-local-v1`. Les instantanés publics sont également conservés sous `trust-watch-v1:<réseau>:<adresse>`. Supprimer un portefeuille retire son espace et ses simulations de l’application, sans agir sur la blockchain.
 
@@ -55,11 +55,12 @@ npm run build
 npm run verify:watch-api
 npm run verify:wallets
 npm run verify:watch-layout
+npm run verify:receive-qr
 node scripts/verify-wallet-flows.cjs --live
 node scripts/verify-watch-layout.cjs --live
 ```
 
-Les tests API couvrent formats et checksums, unités exactes, entrées refusées avant accès réseau, transferts ERC-20, pagination, cache et pannes, adresses Solana sensibles à la casse et non-divulgation des clés serveur. Les tests WebKit couvrent les écrans et cinq tailles, les méthodes sans secrets, l’import, la personnalisation, les transferts fictifs sans modification des soldes réels, le QR constant, la persistance et l’isolation entre portefeuilles.
+Les tests API couvrent formats et checksums, unités exactes, entrées refusées avant accès réseau, transferts ERC-20, pagination, cache et pannes, adresses Solana sensibles à la casse et non-divulgation des clés serveur. Les tests WebKit couvrent les écrans et cinq tailles, les méthodes sans secrets, l’import, la personnalisation, les transferts fictifs sans modification des soldes réels, le QR encodant l’adresse affichée, la persistance et l’isolation entre portefeuilles.
 
 Les captures sont écrites dans `qa/wallet-flows`. L’option `--live` utilise réellement Blockscout et CoinGecko avec l’adresse d’exemple donnée par l’utilisateur, sans opération on-chain.
 

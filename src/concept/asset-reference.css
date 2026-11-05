@@ -10,11 +10,18 @@
 .receive-network > span { width: 18px; height: 18px; display: block; }
 .receive-network svg { width: 100%; height: 100%; }
 .receive-qr-card { margin: 0 16px; padding: 0 0 16px; border: 1px solid #e5e5e5; border-radius: 16px; background: #fff; box-shadow: 0 2px 3px #0002; color: #111; }
-.receive-qr-art { width: 100%; aspect-ratio: 1; position: relative; }
+.receive-qr-art { width: 100%; aspect-ratio: 1; position: relative; scroll-margin-top: 72px; scroll-margin-bottom: 24px; }
 .receive-qr-art > img { display: block; width: 100%; height: 100%; border-radius: 16px; }
-.receive-qr-logo { display: grid; place-items: center; position: absolute; width: 48px; height: 48px; padding: 6px; left: 50%; top: 50%; transform: translate(-50%, -50%); border-radius: 10px; background: #fff; }
+.receive-qr-empty { width: 100%; height: 100%; min-height: 220px; padding: 32px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 16px; color: #85858e; font-size: 14px; line-height: 21px; }
+.receive-qr-empty > svg { width: 32px; height: 32px; }
+.receive-address-error { font-size: 13px; line-height: 19px; margin: 12px 0; }
+.receive-qr-logo { display: grid; place-items: center; position: absolute; width: min(48px,15%); height: min(48px,15%); padding: clamp(3px,2%,6px); left: 50%; top: 50%; transform: translate(-50%, -50%); border-radius: 10px; background: #fff; }
 .receive-qr-logo > span { display: block; width: 100%; height: 100%; border-radius: 7px; overflow: hidden; }
 .receive-qr-logo svg { width: 100%; height: 100%; border-radius: 7px; }
+@media (orientation:landscape) and (max-height:500px) {
+  .receive-qr-art { max-width: calc(100dvh - 180px); margin-inline: auto; }
+  .receive-qr-empty { min-height: 0; padding: 12px; }
+}
 .receive-address { display: block; width: 100%; padding: 4px 14px 0; font-size: 14px; font-weight: 600; line-height: 18px; text-align: center; overflow-wrap: anywhere; user-select: text; color: #111; }
 .receive-notice { display: flex; align-items: flex-start; gap: 9px; min-height: 60px; margin-top: 24px; padding: 12px 14px; border-radius: 16px; background: #f2e9dc; color: #382b1b; }
 .receive-notice > svg { width: 14px; height: 14px; flex-shrink: 0; margin-top: 2px; color: #a96800; stroke-width: 2.7; }

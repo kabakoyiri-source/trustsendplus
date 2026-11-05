@@ -138,6 +138,26 @@
 .wallet-home:is(.watch-home,.fixed-home) .wallet-ai { margin-top: 38px; }
 .wallet-home:is(.watch-home,.fixed-home) .home-watchlist { margin-top: 30px; }
 
+/* Per-wallet receiving addresses, reached from Settings. */
+.receive-address-settings { max-width: 100%; padding: 8px 0 20px; }
+.address-settings-wallet { display: inline-flex; align-items: center; max-width: 100%; gap: 9px; padding: 9px 13px; background: var(--surface); border-radius: 100px; font-size: 14px; font-weight: 500; }
+.address-settings-wallet > svg { width: 20px; height: 20px; flex-shrink: 0; }
+.address-settings-wallet > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.address-settings-intro { margin: 18px 0 22px; font-size: 14px; line-height: 21px; color: var(--muted); }
+.address-settings-label { display: block; margin-bottom: 10px; font-size: 14px; font-weight: 500; }
+.address-settings-token { display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px; background: var(--surface); border-radius: 18px; text-align: left; margin-bottom: 24px; }
+.address-settings-token > .asset-icon-art { height: 38px; width: 38px; }
+.address-settings-token > span:nth-child(2) { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: 5px; }
+.address-settings-token strong { font-size: 16px; line-height: 22px; overflow-wrap: anywhere; }
+.address-settings-token small { color: var(--muted); font-size: 12px; font-weight: 400; }
+.address-settings-token > svg { height: 18px; width: 18px; flex-shrink: 0; }
+.receive-address-settings textarea { min-height: 120px; padding: 14px; font-size: 14px; line-height: 22px; overflow-wrap: anywhere; }
+.address-settings-paste { display: flex; margin: 10px 0 20px auto; padding: 9px 15px; font-size: 13px; }
+.address-settings-error { font-size: 13px; line-height: 20px; margin: 0 0 16px; }
+.address-settings-preview { margin-top: 12px; min-height: 52px; }
+.address-settings-reset { display: flex; gap: 8px; align-items: center; margin: 14px auto 0; font-size: 13px; }
+.address-settings-reset > svg { height: 15px; width: 15px; flex-shrink: 0; }
+
 /* Shared bottom menu measured against the lighter reference. */
 .wallet-app .wallet-navigation .nav-pill { border: 1px solid var(--border); box-shadow: none; background: color-mix(in srgb,var(--bg) 94%,transparent); }
 .wallet-app .wallet-navigation .nav-pill button { color: #9a9ca9; }

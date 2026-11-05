@@ -1,3 +1,4 @@
+const {scanReceiveQr}=require('./receive-qr-test.cjs');
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 process.env.PLAYWRIGHT_BROWSERS_PATH ||= path.resolve(__dirname,'../qa/browsers');
 const {webkit}=require('playwright'),{marketFixture}=require('./market-fixture.cjs'),{watchFixture,ADDRESS}=require('./watch-fixture.cjs');
@@ -39,7 +40,7 @@ async function main(){
   assert.equal(await page.locator('.balance-block h1').innerText(),initialTotal);assert.equal(await page.locator('.watch-type-pill').count(),0);assert.equal(await page.locator('.quick-actions > button').count(),4);assert.equal(chainRequests.length,0);
   await snap('00-young-client-fixed');await layout('.fixed-home');
   await click('Historique');assert.equal(await page.locator('.activity-row').count(),0);await click('Retour');
-  await click('Recevoir');assert.equal(await page.locator('.receive-address').innerText(),ADDRESS);await click('Copy');assert.equal(await page.evaluate(()=>window.__copied),ADDRESS);assert.equal(await page.getByTestId('fixed-receive-qr').getAttribute('src'),'/receive-qr.svg');await snap('00-young-client-receive');await click('Retour');
+  await click('Recevoir');assert.equal(await page.locator('.receive-address').innerText(),ADDRESS);await click('Copy');assert.equal(await page.evaluate(()=>window.__copied),ADDRESS);assert.equal(await scanReceiveQr(page),ADDRESS);await snap('00-young-client-receive');await click('Retour');
   // Reload with different quotes: the demo amount stays fixed while market browsing updates.
   priceFactor=2;await page.evaluate(()=>{for(const key of Object.keys(localStorage))if(key.startsWith('trust-market-v1:'))localStorage.removeItem(key)});await page.reload();await unlock();assert.equal(await page.locator('.balance-block h1').innerText(),initialTotal);assert.equal(chainRequests.length,0);
   await page.locator('.home-watchlist').scrollIntoViewIfNeeded();await page.waitForFunction(()=>!document.querySelector('.home-watchlist .asset-value strong')?.textContent.includes('—'));

@@ -16,7 +16,7 @@ La mise en page utilise des marges de 16 px, des icônes de tokens vectorielles,
 | Portefeuille | Accueil conforme à l’ordre des captures, solde masquable, en-tête au défilement, tokens, contrats perpétuels, prédictions, assistant, surveillance et personnalisation |
 | Marchés | Crypto/Stocks, Bluechips, tendances, favoris, émetteurs bStocks/Robinhood/Ondo, réseaux, tri, 31 actifs, prix et mini-courbes CoinGecko, fiches détaillées et sept périodes réelles de graphique |
 | Envoi | Volet destinataire et volet montant selon les captures, carnet de trois contacts, collage, sélection d’actif, clavier numérique, conversion fiat, maximum, solde insuffisant, vérification et confirmation locale |
-| Réception | Volet conforme à la référence, QR de démonstration fixe, crypto et adresse modifiables, Copy/Share et dépôt Coinbase simulé |
+| Réception | Volet conforme à la référence, QR scannable encodant l’adresse publique affichée, validation du réseau, crypto et adresse modifiables, réglage Changer les adresses par crypto/portefeuille avec collage et remise par défaut, Copy/Share et dépôt Coinbase simulé |
 | Swap | Deux cartes source/destination, inversion, clavier numérique, pourcentage du solde, taux actuel, tolérance et confirmation par glissement avant la revue locale |
 | Recherche | Vue plein écran, consultations récentes, liste Tendance, Tokens/DApps, recherche et collage dans la barre flottante |
 | Achat/Vente | Écrans des captures, devise/crypto, clavier, minimum illustratif, fournisseur indisponible et mode de simulation locale avec conversion fiat, revue et confirmation |
