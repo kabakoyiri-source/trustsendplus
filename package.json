@@ -9,6 +9,7 @@
   "dependencies": {
     "@supabase/postgrest-js": "^2.118.0",
     "@vitejs/plugin-react": "^4.2.1",
+    "jsqr": "^1.4.0",
     "qrcode": "^1.5.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -35,12 +36,12 @@
     "verify:pwa-recovery": "node scripts/verify-pwa-recovery.cjs",
     "export:atlas": "node scripts/export-atlas.cjs",
     "verify:supabase": "node scripts/verify-supabase.cjs",
-    "verify:supabase-ui": "node scripts/verify-supabase-ui.cjs"
+    "verify:supabase-ui": "node scripts/verify-supabase-ui.cjs",
+    "verify:live-wallet": "node scripts/verify-live-wallet.cjs"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.10",
     "bcryptjs": "^3.0.3",
-    "jsqr": "1.4.0",
     "mongodb": "^7.7.0",
     "playwright": "1.62.1",
     "sharp": "0.35.4"

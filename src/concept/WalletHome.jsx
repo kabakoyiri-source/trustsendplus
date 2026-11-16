@@ -2,8 +2,10 @@ import React from 'react'
 import { FiArrowDown, FiArrowUpRight, FiChevronRight, FiPlus, FiRefreshCw, FiSearch, FiTrendingUp, FiZap } from 'react-icons/fi'
 import { GlobeArtwork, HistoryGlyph, HomeGlyph, InfinityGlyph, PerpetualBadge, PredictionFlag, ScanGlyph, SlidersGlyph, SparkleGlyph, StockArtwork, TokenArtwork, WalletGlyph } from './WalletArtwork'
 import {WalletAvatar} from './WalletVisuals'
+import {holdingGain,portfolioChange} from './wallet-valuation'
+import {compactNumber,useMarketResource} from './market'
 
-const assetGain=(asset,wallet)=>{const units=wallet.balances[asset.id]||0;return units===0?0:Number.isFinite(asset.market?.priceChange24h)?units*asset.market.priceChange24h:null}
+const assetGain=(asset,wallet)=>holdingGain(asset,wallet.balances[asset.id]||0)
 
 function HomeHeading({children,onClick}) { return <button className="section-heading" onClick={onClick}><h2>{children}</h2><FiChevronRight/></button> }
 
@@ -51,9 +53,10 @@ export function WalletNavigation({tab,onChange}) {
 }
 
 export default function WalletHome({data,wallet,assets,marketAssets=assets,total,Coin,onAction,onRoute,onAsset,onMarkets,onTokens,onCustomize,onToggleBalance,watch=false}) {
+  const perpetuals=useMarketResource({type:'perpetuals'},!watch)
   const money=(n,precision=2)=>walletMoney(n,data.currency,precision)
   const quoted=assets.filter(a=>(wallet.balances[a.id]||0)>0&&Number.isFinite(a.price)&&Number.isFinite(a.market?.priceChange24h))
-  const totalGain=watch?(quoted.length?quoted.reduce((sum,a)=>sum+assetGain(a,wallet),0):null):assets.some(a=>assetGain(a,wallet)===null)?null:assets.reduce((sum,a)=>sum+assetGain(a,wallet),0)
+  const totalGain=watch?(quoted.length?quoted.reduce((sum,a)=>sum+assetGain(a,wallet),0):null):portfolioChange(assets,wallet.balances).gain
   const pricedTotal=watch?quoted.reduce((sum,a)=>sum+(wallet.balances[a.id]||0)*a.price,0):total
   const percentage=Number.isFinite(totalGain)&&Number.isFinite(pricedTotal)&&pricedTotal-totalGain>0?totalGain/(pricedTotal-totalGain)*100:null
   const tokens=assets.filter(a=>data.visible.includes(a.id))
@@ -66,8 +69,9 @@ export default function WalletHome({data,wallet,assets,marketAssets=assets,total
       <span><strong>bStocks now live, 0% fees</strong><small>Buy now</small></span>
     </button>}
     <div className="balance-block">
+      {!watch&&<span className="portfolio-simulation-label">Portefeuille simulé · Cours du marché</span>}
       <button className="wallet-balance-toggle" aria-label={data.hide?'Afficher le solde':'Masquer le solde'} onClick={onToggleBalance}><h1 style={watch||wallet.valuation?{'--watch-balance-size':`${Math.min(10.2,154/Math.max(balanceLabel.length,1))}cqw`}:undefined}>{balanceLabel}</h1></button>
-      {(!watch||Number.isFinite(totalGain))&&<p className={(totalGain??0)>=0?'positive':'negative'}><span className="gain-arrow" aria-hidden="true"/>{money(totalGain,watch?2:4)} <span>{percentage!==null?`(${percentage.toFixed(2)}%)`:''}</span></p>}
+      <p className={Number.isFinite(totalGain)?totalGain>=0?'positive':'negative':'muted'}>{Number.isFinite(totalGain)&&<span className="gain-arrow" aria-hidden="true"/>}{money(totalGain,2)} <span>{percentage!==null?`(${percentage.toFixed(2)}%)`:''}</span></p>
     </div>
     {!watch&&<HomeActions onAction={onAction}/>}
     <section className="section home-tokens">
@@ -77,7 +81,7 @@ export default function WalletHome({data,wallet,assets,marketAssets=assets,total
     </section>
     {!watch&&<section className="section home-perpetuals">
       <HomeHeading onClick={()=>onRoute('perps')}>Contrats perpétuels</HomeHeading>
-      <div className="home-carousel perpetual-carousel">{[{id:'btc',symbol:'BTC',leverage:'40x',volume:'$7B'},{id:'eth',symbol:'ETH',leverage:'25x',volume:'$3.25B'},{id:'hype',symbol:'HYPE',leverage:'10x',volume:'$250M'}].map(a=><button className="home-perpetual-card" key={a.id} onClick={()=>onRoute('perps')}>
+      <div className="home-carousel perpetual-carousel">{['btc','eth','hype'].map(id=>{const quote=perpetuals.data?.markets?.find(item=>item.id===id);return {id,symbol:id.toUpperCase(),leverage:quote?`${quote.maxLeverage}x`:'—',volume:quote?`$${compactNumber(quote.volume24h)}`:'—'}}).map(a=><button className="home-perpetual-card" key={a.id} onClick={()=>onRoute('perps')}>
         <span className="home-perpetual-coin"><TokenArtwork id={a.id}/><PerpetualBadge/></span>
         <span className="perpetual-symbol"><strong>{a.symbol}</strong><small>{a.leverage}</small></span><span className="perpetual-volume">{a.volume} Vol</span>
       </button>)}</div>

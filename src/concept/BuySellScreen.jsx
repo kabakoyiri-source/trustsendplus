@@ -14,7 +14,7 @@ export default function BuySellScreen({kind,asset,assets,balances,currency,amoun
   const units=selling?number:asset.price>0?number/asset.price:0
   const valid=Number.isFinite(number)&&number>0&&Number.isFinite(units)&&units>0&&units<=1e9&&(!selling||units>=minimum&&units<=balance)&&asset.price>0
   const message=selling&&number<minimum?`Le montant minimal est de ${cryptoAmount(minimum)} ${asset.symbol}`:selling&&units>balance?'Solde insuffisant':simulation?'Simulation locale':'Aucun fournisseur disponible'
-  const converted=amount&&asset.price>0&&(selling||simulation)?selling?number*asset.price:number/asset.price:null
+  const converted=amount&&asset.price>0?selling?number*asset.price:number/asset.price:null
   const [whole,fraction]=amount.split('.'),display=(selling?whole:whole.replace(/\B(?=(\d{3})+(?!\d))/g,' '))+(fraction!==undefined?','+fraction:''),fontSize=`clamp(26px,${Math.max(7,18-Math.max(0,amount.length-5)*1.5)}cqw,68px)`
   const assetPill=<button className="retail-selector retail-asset-selector" aria-label="Choisir la crypto à acheter ou vendre" onClick={()=>setPicker('asset')}><AssetIcon asset={asset}/>{asset.symbol}<FiChevronRight/></button>
   return <section className={`retail-screen ${selling?'is-selling':'is-buying'}`}>

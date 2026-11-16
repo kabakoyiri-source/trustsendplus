@@ -1,10 +1,17 @@
-// Demo holdings use saved prices; market browsing and watch wallets keep live quotes.
-export function portfolioQuotes(assets,wallet,currency) {
-  if(!wallet.valuation)return assets
-  const rate=wallet.valuation.rates[currency]
-  return assets.map(asset=>{
-    const base=wallet.valuation.pricesEur[asset.id]
-    const price=Number.isFinite(base)&&Number.isFinite(rate)?base*rate:null
-    return {...asset,price,change:0,market:{...asset.market,price,change24h:0,priceChange24h:0}}
-  })
+// Quantities may be simulated; every valuation uses the current market quote.
+export function holdingValue(asset,units) {
+  return units===0?0:Number.isFinite(asset.price)&&asset.price>0?units*asset.price:null
+}
+
+export function holdingGain(asset,units) {
+  return units===0?0:Number.isFinite(asset.price)&&asset.price>0&&Number.isFinite(asset.market?.priceChange24h)?units*asset.market.priceChange24h:null
+}
+
+export function portfolioChange(assets,balances) {
+  const holdings=assets.filter(asset=>(balances[asset.id]||0)>0)
+  if(!holdings.length)return {gain:0,percent:0}
+  if(holdings.some(asset=>holdingGain(asset,balances[asset.id])===null))return {gain:null,percent:null}
+  const total=holdings.reduce((sum,asset)=>sum+holdingValue(asset,balances[asset.id]),0)
+  const gain=holdings.reduce((sum,asset)=>sum+holdingGain(asset,balances[asset.id]),0)
+  return {gain,percent:total-gain>0?gain/(total-gain)*100:null}
 }

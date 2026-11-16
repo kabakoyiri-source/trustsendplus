@@ -31,14 +31,15 @@ export function SendRecipient({asset,assets,balances,address,onAddress,onAsset,o
 export function SendAmount({asset,assets,balance,balances,address,currency,amount,onAmount,onAsset,onBack,onReview}) {
   const [entry,setEntry]=useState(amount),[fiat,setFiat]=useState(false),[picker,setPicker]=useState(false)
   const number=Number(entry),units=fiat?asset.price>0?number/asset.price:0:number
-  const valid=Number.isFinite(units)&&units>0&&units<=1e9,insufficient=valid&&units>balance
+  const hasRate=Number.isFinite(asset.price)&&asset.price>0
+  const valid=hasRate&&Number.isFinite(units)&&units>0&&units<=1e9,insufficient=valid&&units>balance
   useEffect(()=>onAmount(entry&&Number.isFinite(units)?String(units):''),[entry,fiat,asset.price,onAmount])
   function toggle(){if(!asset.price)return;setEntry(entry?String(fiat?number/asset.price:number*asset.price):'');setFiat(value=>!value)}
   function maximum(){setFiat(false);setEntry(String(balance))}
   return <section className="send-panel send-amount-panel">
     <header className="trading-sheet-header"><button aria-label="Retour" onClick={onBack}><FiArrowLeft/></button><h1>Montant</h1><span/></header>
     <div className="send-recipient-strip"><span>À :</span><strong>{address}</strong></div>
-    <div className="send-amount-hero"><input className={entry?'':'is-empty'} aria-label="Montant de la simulation" inputMode="none" autoComplete="off" placeholder="0" value={entry.replace('.',',')} onChange={event=>setEntry(event.target.value?cleanAmount(event.target.value):'')}/><button className="send-fiat-toggle" aria-label="Basculer le montant en monnaie" onClick={toggle}>{fiat?`≈ ${cryptoAmount(units)} ${asset.symbol}`:`≈ ${walletMoney(entry&&Number.isFinite(asset.price)?number*asset.price:0,currency)}`}<FiatToggleGlyph/></button>{insufficient&&<p className="send-amount-error" role="alert">Solde insuffisant</p>}</div>
+    <div className="send-amount-hero"><input className={entry?'':'is-empty'} aria-label="Montant de la simulation" inputMode="none" autoComplete="off" placeholder="0" value={entry.replace('.',',')} onChange={event=>setEntry(event.target.value?cleanAmount(event.target.value):'')}/><button className="send-fiat-toggle" aria-label="Basculer le montant en monnaie" disabled={!hasRate} onClick={toggle}>{fiat?`≈ ${cryptoAmount(units)} ${asset.symbol}`:`≈ ${walletMoney(entry?hasRate?number*asset.price:null:0,currency)}`}<FiatToggleGlyph/></button>{insufficient&&<p className="send-amount-error" role="alert">Solde insuffisant</p>}{!hasRate&&<p className="send-amount-error" role="status">Cours momentanément indisponible</p>}</div>
     <div className="send-available"><button className="send-balance-token" aria-label="Changer la crypto à envoyer" onClick={()=>setPicker(true)}><AssetIcon asset={asset}/><span><strong>{cryptoAmount(balance)} {asset.symbol}</strong><small>{walletMoney(balance===0?0:Number.isFinite(asset.price)?balance*asset.price:null,currency)}</small></span></button><button className="send-max" onClick={maximum}>Max</button></div>
     <NumericKeypad value={entry} onChange={setEntry}/>
     <footer className="trading-sheet-footer"><button className="trading-primary" aria-label="Vérifier la simulation" disabled={!valid||insufficient} onClick={()=>onReview(units)}>Vérifier</button></footer>

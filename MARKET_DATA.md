@@ -14,6 +14,10 @@ Les actifs, périodes, devises et fournisseurs autorisés sont limités côté s
 
 Les prix sont demandés dans la devise choisie. Le FCFA utilise la cotation EUR multipliée par la parité 655,957 ; aucun ancien taux USD fixe n’est appliqué.
 
+Young client utilise aussi ces cotations actuelles, sans remplacer les quantités enregistrées ni les synchroniser avec une adresse publique. Les anciennes valorisations fixes du relevé initial ne servent plus aux conversions. Le dollar américain est la devise initiale et celle de la migration des anciennes installations. Les variations sont calculées à partir de `price_change_24h` sur les quantités détenues ; une donnée absente affiche « — », jamais une variation inventée. Les envois avec un cours indisponible ne peuvent pas être confirmés.
+
+Le scanner demande uniquement la caméra arrière, sans microphone, et affiche son aperçu en plein écran avec un cadre de lecture. Il décode localement les QR (BarcodeDetector ou jsQR en secours), ainsi que les images importées, puis valide l’adresse et le réseau avant de remplir le destinataire. Il ne visite pas les liens contenus dans les QR et n’exécute aucune demande de contrat. La caméra s’arrête à la fermeture, au passage en arrière-plan et après lecture. HTTPS et l’autorisation caméra du navigateur sont nécessaires.
+
 Le catalogue partagé `src/concept/asset-catalog.json` associe chaque actif à son identifiant CoinGecko vérifié. Il comprend les cryptos principales, les tokens de la liste Tendance et les actions tokenisées bStocks, Robinhood et Ondo. Les cours des actions tokenisées correspondent à ces tokens précis. Les images supplémentaires sont conservées dans `public/tokens` et dans le cache PWA. Les mini-courbes des listes utilisent les points fournis par CoinGecko ; elles ne sont pas générées à partir de formes décoratives.
 
 L’onglet Markets propose Crypto/Stocks, les émetteurs, les favoris, le filtrage par réseau et le tri par volume ou capitalisation. La recherche propose les dernières consultations, les tokens, les DApps et le collage depuis le presse-papiers. Les filtres et les recherches récentes sont conservés localement.
