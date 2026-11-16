@@ -69,7 +69,6 @@ export default function WalletHome({data,wallet,assets,marketAssets=assets,total
       <span><strong>bStocks now live, 0% fees</strong><small>Buy now</small></span>
     </button>}
     <div className="balance-block">
-      {!watch&&<span className="portfolio-simulation-label">Portefeuille simulé · Cours du marché</span>}
       <button className="wallet-balance-toggle" aria-label={data.hide?'Afficher le solde':'Masquer le solde'} onClick={onToggleBalance}><h1 style={watch||wallet.valuation?{'--watch-balance-size':`${Math.min(10.2,154/Math.max(balanceLabel.length,1))}cqw`}:undefined}>{balanceLabel}</h1></button>
       <p className={Number.isFinite(totalGain)?totalGain>=0?'positive':'negative':'muted'}>{Number.isFinite(totalGain)&&<span className="gain-arrow" aria-hidden="true"/>}{money(totalGain,2)} <span>{percentage!==null?`(${percentage.toFixed(2)}%)`:''}</span></p>
     </div>

@@ -4,7 +4,7 @@ La liste affiche les portefeuilles déjà enregistrés dans l’application, ave
 
 Le mode lecture seule demande un réseau et une adresse publique. Les adresses EVM peuvent aussi être résolues depuis un nom `.eth` par Blockscout. Après vérification auprès du fournisseur, l’utilisateur choisit le nom, la couleur et l’icône. Aucun compte n’est connecté et aucune autorisation de dépense n’est créée.
 
-Le seul portefeuille ajouté par défaut est « Young client » (`main`). Ses quantités restent fictives et indépendantes des soldes blockchain. Leur valorisation et leur variation sur 24 heures utilisent désormais les cours CoinGecko actuels, en dollars par défaut, comme les envois, les achats et les swaps. Aucun historique public n’est copié dans ce portefeuille. L’accueil l’identifie comme portefeuille simulé.
+Le seul portefeuille ajouté par défaut est « Young client » (`main`). Ses quantités restent fictives et indépendantes des soldes blockchain. Leur valorisation et leur variation sur 24 heures utilisent désormais les cours CoinGecko actuels, en dollars par défaut, comme les envois, les achats et les swaps. Aucun historique public n’est copié dans ce portefeuille.
 
 `main-wallet-seed.json` conserve uniquement la provenance historique des quantités initiales et l’adresse de réception. Ses anciennes cotations et taux de change figés ne sont plus utilisés. La migration `defaultWatchRemoved` retire une seule fois le portefeuille `watch-ethereum-default` inséré par l’application ; elle conserve les portefeuilles importés par l’utilisateur. Le mode lecture seule reste disponible via Ajouter un portefeuille. Le marqueur `liveUsdPricing` passe les anciennes installations en USD une fois ; un choix ultérieur de devise reste conservé.
 

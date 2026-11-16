@@ -17,4 +17,3 @@
 .qr-scanner-message { position: absolute; z-index: 3; left: 20px; right: 20px; bottom: calc(env(safe-area-inset-bottom,0px) + 36px); text-align: center; font-size: 14px; line-height: 1.5; }
 .qr-scanner-message p { padding: 12px 16px; border-radius: 16px; color: #fff; background: #101214db; margin: 0 0 12px; }
 .qr-scanner-message button { color: #111; background: #fff; padding: 12px 20px; border-radius: 30px; font-weight: 600; }
-.portfolio-simulation-label { display: block; margin: 0 0 9px; color: var(--muted); font-size: 12px; font-weight: 400; }

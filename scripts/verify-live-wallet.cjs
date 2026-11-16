@@ -48,7 +48,7 @@ async function main(){
   await page.goto('https://live-wallet.test');await unlock();await page.waitForFunction(()=>document.querySelector('.balance-block h1')?.textContent.startsWith('$'));
   assert.equal((await read()).wallets.length,1);assert.equal((await read()).currency,'USD');assert.equal((await read()).wallets[0].name,'Young client');
   assert.equal(await page.locator('.balance-block h1').innerText(),money(SEED.ethUnits*quote()));assert(await page.locator('.balance-block > p').getAttribute('class')==='negative');assert((await page.locator('.balance-block > p').innerText()).includes('-3.00%'));
-  assert(await page.getByText('Portefeuille simulé · Cours du marché',{exact:true}).isVisible());
+  assert.equal(await page.locator('.portfolio-simulation-label').count(),0);
   await click('Envoyer');await page.getByRole('button',{name:/^D Main 1 /}).click();await click('Continuer');await page.getByLabel('Montant de la simulation').fill('1');
   assert((await page.locator('.send-fiat-toggle').innerText()).includes(money(quote())));await click('Vérifier la simulation');assert((await page.locator('.detail-list').innerText()).includes('$'));await click('Retour');await click('Retour');await click('Retour');
   await page.locator('.home-tokens .asset-main').first().click();assert((await page.locator('.asset-detail-price strong').innerText()).includes('$'));assert.equal(await page.locator('.asset-activity .asset-history-entry').count(),0);assert.equal(await page.locator('.asset-section-heading small').count(),0);await click('Retour');
