@@ -126,7 +126,7 @@
 .wallet-home:is(.watch-home,.fixed-home) .balance-block { padding: 10px 0 34px; }
 .wallet-home:is(.watch-home,.fixed-home) .balance-block h1 { font-size: clamp(21px,var(--watch-balance-size,10.2cqw),40px); font-weight: 600; line-height: 1.15; letter-spacing: -.035em; white-space: nowrap; }
 .wallet-home:is(.watch-home,.fixed-home) .balance-block p { font-size: 15px; margin-top: 10px; gap: 4px; letter-spacing: -.02em; }
-.wallet-home:is(.watch-home,.fixed-home) .home-tokens { margin-top: 0; }
+.wallet-home.watch-home .home-tokens { margin-top: 0; }
 .wallet-home:is(.watch-home,.fixed-home) .home-tokens .section-heading { margin-bottom: 16px; }
 .wallet-home:is(.watch-home,.fixed-home) .asset-main { column-gap: 14px; min-height: 66px; }
 .wallet-home:is(.watch-home,.fixed-home) .row-text { min-width: 0; flex: 1 1 0%; }
